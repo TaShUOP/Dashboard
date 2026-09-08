@@ -1,0 +1,22 @@
+# Node.js dependencies & build outputs
+node_modules
+dist
+dist-ssr
+build
+.npm
+
+# Version control & IDE
+.git
+.gitignore
+.vscode
+.idea
+
+# Logs & temp files
+*.log
+.DS_Store
+Thumbs.db
+__pycache__
+scratch
+Jenkinsfile
+docker-compose.yml
+README.md

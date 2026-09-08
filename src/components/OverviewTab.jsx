@@ -1,0 +1,172 @@
+import React from 'react';
+import { 
+  BarChart2, 
+  CheckCircle2, 
+  Cpu, 
+  Database, 
+  PieChart, 
+  TrendingUp, 
+  ArrowRight,
+  Zap,
+  ShieldCheck,
+  Award
+} from 'lucide-react';
+import dashboardData from '../data/dashboard_data.json';
+
+export default function OverviewTab({ setActiveTab }) {
+  const { metrics, centroids, segments } = dashboardData;
+
+  const kpis = [
+    { title: 'Total Consumer Records', value: metrics.total_observations.toLocaleString(), label: 'Standardized ML-ready rows', icon: Database, color: 'var(--siemens-bright)' },
+    { title: 'Optimal Clusters (K)', value: metrics.optimal_k, label: 'K-Means Silhouette maximum', icon: PieChart, color: '#A78BFA' },
+    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 3 Principal Components', icon: Cpu, color: 'var(--siemens-accent)' },
+    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Highest cluster separation', icon: Award, color: '#FBBF24' },
+    { title: 'Davies-Bouldin Index', value: metrics.davies_bouldin, label: 'Cluster compactness (lower=better)', icon: ShieldCheck, color: '#34D399' },
+    { title: 'Calinski-Harabasz', value: metrics.calinski_harabasz.toLocaleString(), label: 'Variance ratio criterion', icon: TrendingUp, color: '#F87171' },
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+      {/* Banner */}
+      <div className="glass-card" style={{
+        background: 'linear-gradient(135deg, rgba(0, 153, 153, 0.25) 0%, rgba(11, 15, 23, 0.9) 100%)',
+        border: '1px solid rgba(0, 229, 255, 0.25)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
+              <span className="badge badge-teal">GROUP 1 — 5 COMPLETE ANALYTICS PIPELINE</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>BDG2 Siemens Energy Portfolio</span>
+            </div>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+              Consumer Energy Consumption Segmentation Dashboard
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '850px', fontSize: '0.95rem' }}>
+              End-to-end unsupervised machine learning framework integrating <strong>PCA dimensionality reduction</strong> and <strong>K-Means clustering</strong> to segment Siemens Energy building & facility consumers into 5 actionable operational profiles.
+            </p>
+          </div>
+          <button className="btn-primary" onClick={() => setActiveTab('group5')}>
+            View Optimization Hub <ArrowRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* KPI Cards Grid */}
+      <div className="grid-cols-3">
+        {kpis.map((kpi, idx) => {
+          const Icon = kpi.icon;
+          return (
+            <div key={idx} className="glass-card glass-card-interactive">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                  {kpi.title}
+                </span>
+                <div style={{
+                  padding: '0.5rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  color: kpi.color
+                }}>
+                  <Icon size={20} />
+                </div>
+              </div>
+              <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FFF', letterSpacing: '-0.02em' }}>
+                {kpi.value}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+                {kpi.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Cluster Distribution Overview & Key Segments */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '1.25rem' }}>
+        {/* Cluster Distribution Card */}
+        <div className="glass-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cluster Size Distribution</h3>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>K = 5 Consumer Segments</span>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {segments.map(seg => (
+              <div key={seg.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginBottom: '0.35rem' }}>
+                  <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: seg.color }}></span>
+                    Cluster {seg.id}: {seg.name}
+                  </span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
+                    <strong>{seg.count.toLocaleString()}</strong> ({seg.pct}%)
+                  </span>
+                </div>
+                <div style={{ width: '100%', height: '8px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${seg.pct}%`,
+                    height: '100%',
+                    background: seg.color,
+                    borderRadius: '4px',
+                    transition: 'width 0.6s ease'
+                  }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 5 Group Workflow Summary */}
+        <div className="glass-card">
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.25rem' }}>
+            Project Workflow & Methodology (Groups 1–5)
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+            {[
+              { g: 'Group 1', title: 'Dataset & Data Preparation', desc: 'Ingested BDG2 Siemens metadata/consumption records. Cleaned missing values, removed duplicates, treated outliers, and established feature schemas.', tab: 'group1' },
+              { g: 'Group 2', title: 'EDA & Feature Engineering', desc: 'Created 20 features including 1h, 24h, 168h lags, 24h/7d rolling means, baseline differences, and cyclical sin/cos temporal variables. Applied StandardScaler.', tab: 'group2' },
+              { g: 'Group 3', title: 'PCA & Dimensionality Reduction', desc: 'Extracted 3 Principal Components capturing 59.39% cumulative variance. Computed PCA loadings for overall magnitude (PC1), weekly cycle (PC2), and diurnal rhythm (PC3).', tab: 'group3' },
+              { g: 'Group 4', title: 'K-Means & Model Evaluation', desc: 'Tested K=2..10. Selected K=5 based on max Silhouette score (0.3481). Evaluated via Davies-Bouldin (1.0357) and Calinski-Harabasz (8574.51).', tab: 'group4' },
+              { g: 'Group 5', title: 'Optimization & Dashboard Hub', desc: 'Formulated targeted Siemens Energy operational tactics (BESS peak shaving, Desigo CC automation, load shifts) with interactive energy savings calculator.', tab: 'group5' },
+            ].map((step, idx) => (
+              <div 
+                key={idx} 
+                onClick={() => setActiveTab(step.tab)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.85rem',
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--border-color)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                className="glass-card-interactive"
+              >
+                <div style={{
+                  padding: '0.35rem 0.6rem',
+                  borderRadius: '6px',
+                  background: 'rgba(0, 229, 255, 0.12)',
+                  color: 'var(--siemens-bright)',
+                  fontWeight: 700,
+                  fontSize: '0.75rem',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {step.g}
+                </div>
+                <div>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>{step.title}</h4>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

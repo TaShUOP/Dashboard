@@ -8,7 +8,7 @@ services:
     container_name: siemens-energy-dashboard
     restart: always
     ports:
-      - "3000:80"
+      - "8205:80"
     environment:
       - NODE_ENV=production
     healthcheck:

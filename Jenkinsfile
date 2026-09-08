@@ -10,7 +10,7 @@ pipeline {
     environment {
         APP_NAME       = 'siemens-energy-dashboard'
         IMAGE_TAG      = "${env.BUILD_NUMBER ?: 'latest'}"
-        CONTAINER_PORT = '3000'
+        CONTAINER_PORT = '8205'
     }
 
     stages {
@@ -21,6 +21,7 @@ pipeline {
                 echo " Build Number: ${env.BUILD_NUMBER}"
                 echo " Branch: ${env.BRANCH_NAME ?: 'main'}"
                 echo " Workspace: ${env.WORKSPACE}"
+                echo " Target Port: ${env.CONTAINER_PORT}"
                 echo "================================================================"
             }
         }
@@ -48,11 +49,11 @@ pipeline {
 
         stage('Docker Integration Test') {
             steps {
-                echo "Running temporary container health verification..."
+                echo "Running temporary container health verification on port ${CONTAINER_PORT}..."
                 script {
-                    sh "docker run -d --name ${APP_NAME}-test -p 8085:80 ${APP_NAME}:${IMAGE_TAG}"
+                    sh "docker run -d --name ${APP_NAME}-test -p ${CONTAINER_PORT}:80 ${APP_NAME}:${IMAGE_TAG}"
                     sleep 5
-                    sh "curl -f http://localhost:8085/ || wget --quiet --tries=1 --spider http://localhost:8085/"
+                    sh "curl -f http://localhost:${CONTAINER_PORT}/ || wget --quiet --tries=1 --spider http://localhost:${CONTAINER_PORT}/"
                     sh "docker rm -f ${APP_NAME}-test"
                 }
             }
@@ -60,7 +61,7 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                echo "Deploying production container..."
+                echo "Deploying production container via docker-compose on port ${CONTAINER_PORT}..."
                 script {
                     sh "docker-compose up -d --build"
                 }
@@ -74,7 +75,7 @@ pipeline {
             sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
         }
         success {
-            echo "SUCCESS: Siemens Energy Dashboard successfully built, verified, and containerized!"
+            echo "SUCCESS: Siemens Energy Dashboard successfully built and deployed on port ${CONTAINER_PORT}!"
         }
         failure {
             echo "FAILURE: Build or test failed in pipeline."

@@ -1,82 +1,80 @@
 pipeline {
     agent any
 
-    options {
-        timeout(time: 30, unit: 'MINUTES')
-        retry(2)
-        disableConcurrentBuilds()
+    environment {
+        APP_NAME       = 'siemens-dashboard'
+        CONTAINER_NAME = 'siemens_energy_dashboard'
+        HOST_PORT      = '8205'
+        IMAGE_TAG      = "${BUILD_NUMBER}"
     }
 
-    environment {
-        APP_NAME       = 'siemens-energy-dashboard'
-        IMAGE_TAG      = "${env.BUILD_NUMBER ?: 'latest'}"
-        CONTAINER_PORT = '8205'
-        DOCKER_BUILDKIT = '0'
-        COMPOSE_DOCKER_CLI_BUILD = '0'
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 15, unit: 'MINUTES')
     }
 
     stages {
-        stage('Checkout & Info') {
+        stage('1. Code Validation & Build') {
             steps {
-                echo "================================================================"
-                echo " Starting CI/CD Pipeline for Siemens Energy Dashboard"
-                echo " Build Number: ${env.BUILD_NUMBER}"
-                echo " Branch: ${env.BRANCH_NAME ?: 'main'}"
-                echo " Workspace: ${env.WORKSPACE}"
-                echo " Target Port: ${env.CONTAINER_PORT}"
-                echo "================================================================"
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                echo "Installing npm dependencies..."
+                echo "================================================"
+                echo "Checking repository integrity & building bundle"
+                echo "================================================"
+                sh 'test -f package.json || (echo "Error: package.json missing!" && exit 1)'
+                sh 'test -f Dockerfile || (echo "Error: Dockerfile missing!" && exit 1)'
                 sh 'npm ci || npm install'
-            }
-        }
-
-        stage('Build & Code Audit') {
-            steps {
-                echo "Compiling production bundle via Vite..."
                 sh 'npm run build'
+                echo "Validation and build passed successfully."
             }
         }
 
-        stage('Build Docker Image') {
+        stage('2. Build Docker Image') {
             steps {
-                echo "Building Docker Image ${APP_NAME}:${IMAGE_TAG}..."
-                sh "docker build -t ${APP_NAME}:${IMAGE_TAG} -t ${APP_NAME}:latest ."
-            }
-        }
-
-        stage('Docker Integration Test') {
-            steps {
-                echo "Cleaning up any pre-existing test containers..."
-                sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
-                
-                echo "Running temporary container health verification on port ${CONTAINER_PORT}..."
+                echo "Building Docker image ${APP_NAME}:${IMAGE_TAG}..."
                 script {
-                    sh "docker run -d --name ${APP_NAME}-test -p ${CONTAINER_PORT}:80 ${APP_NAME}:${IMAGE_TAG}"
-                    sleep 5
-                    sh "curl -f http://localhost:${CONTAINER_PORT}/ || wget --quiet --tries=1 --spider http://localhost:${CONTAINER_PORT}/"
-                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
+                    sh "docker build -t ${APP_NAME}:${IMAGE_TAG} -t ${APP_NAME}:latest ."
                 }
             }
         }
 
-        stage('Deploy Container') {
+        stage('3. Deploy Container') {
             steps {
-                echo "Deploying production container..."
+                echo "Deploying container ${CONTAINER_NAME} on port ${HOST_PORT}..."
                 script {
-                    // Ensure test container and stale production containers are forcibly removed
-                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
-                    sh "docker rm -f ${APP_NAME} 2>/dev/null || true"
-                    
-                    // Stop & remove Compose stack before re-launching
-                    sh "docker-compose down --volumes --remove-orphans 2>/dev/null || docker compose down --volumes --remove-orphans 2>/dev/null || true"
-                    
-                    // Deploy via Docker Compose
-                    sh "docker compose up -d --build 2>/dev/null || docker-compose up -d --build"
+                    // Stop and remove previous container instance if running
+                    sh """
+                        if [ \$(docker ps -a -q -f name=${CONTAINER_NAME}) ]; then
+                            echo "Stopping existing container..."
+                            docker stop ${CONTAINER_NAME} || true
+                            docker rm ${CONTAINER_NAME} || true
+                        fi
+                    """
+                    // Start new container instance
+                    sh """
+                        docker run -d \\
+                            --name ${CONTAINER_NAME} \\
+                            --restart always \\
+                            -p ${HOST_PORT}:80 \\
+                            ${APP_NAME}:latest
+                    """
+                }
+            }
+        }
+
+        stage('4. Health Check') {
+            steps {
+                echo "Verifying application availability..."
+                script {
+                    sh """
+                        sleep 3
+                        if docker ps | grep -q ${CONTAINER_NAME}; then
+                            echo "Container ${CONTAINER_NAME} is healthy and running!"
+                        else
+                            echo "Error: Container failed to start!"
+                            docker logs ${CONTAINER_NAME}
+                            exit 1
+                        fi
+                    """
                 }
             }
         }
@@ -84,14 +82,18 @@ pipeline {
 
     post {
         always {
-            echo "Performing post-build container cleanup..."
-            sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
+            echo "Cleaning up dangling images..."
+            sh 'docker image prune -f || true'
         }
         success {
-            echo "SUCCESS: Siemens Energy Dashboard successfully built and deployed on port ${CONTAINER_PORT}!"
+            echo "================================================"
+            echo "SUCCESS: Siemens Energy Dashboard deployed successfully!"
+            echo "================================================"
         }
         failure {
-            echo "FAILURE: Build or test failed in pipeline."
+            echo "================================================"
+            echo "FAILURE: Deployment failed! Check logs above."
+            echo "================================================"
         }
     }
 }

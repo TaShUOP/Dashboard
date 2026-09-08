@@ -11,7 +11,6 @@ pipeline {
         APP_NAME       = 'siemens-energy-dashboard'
         IMAGE_TAG      = "${env.BUILD_NUMBER ?: 'latest'}"
         CONTAINER_PORT = '8205'
-        // Disable BuildKit compatibility mismatch for legacy Python docker-compose v1
         DOCKER_BUILDKIT = '0'
         COMPOSE_DOCKER_CLI_BUILD = '0'
     }
@@ -52,25 +51,31 @@ pipeline {
 
         stage('Docker Integration Test') {
             steps {
+                echo "Cleaning up any pre-existing test containers..."
+                sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
+                
                 echo "Running temporary container health verification on port ${CONTAINER_PORT}..."
                 script {
-                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
                     sh "docker run -d --name ${APP_NAME}-test -p ${CONTAINER_PORT}:80 ${APP_NAME}:${IMAGE_TAG}"
                     sleep 5
                     sh "curl -f http://localhost:${CONTAINER_PORT}/ || wget --quiet --tries=1 --spider http://localhost:${CONTAINER_PORT}/"
-                    sh "docker rm -f ${APP_NAME}-test"
+                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
                 }
             }
         }
 
         stage('Deploy Container') {
             steps {
-                echo "Deploying production container via Docker Compose..."
+                echo "Deploying production container..."
                 script {
-                    // Remove existing container first to prevent legacy python docker-compose v1 KeyError: 'ContainerConfig'
-                    sh "docker-compose down 2>/dev/null || docker compose down 2>/dev/null || true"
+                    // Ensure test container and stale production containers are forcibly removed
+                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
+                    sh "docker rm -f ${APP_NAME} 2>/dev/null || true"
                     
-                    // Try Docker Compose V2 first, fallback to V1
+                    // Stop & remove Compose stack before re-launching
+                    sh "docker-compose down --volumes --remove-orphans 2>/dev/null || docker compose down --volumes --remove-orphans 2>/dev/null || true"
+                    
+                    // Deploy via Docker Compose
                     sh "docker compose up -d --build 2>/dev/null || docker-compose up -d --build"
                 }
             }
@@ -79,7 +84,7 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning up temporary test containers..."
+            echo "Performing post-build container cleanup..."
             sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
         }
         success {

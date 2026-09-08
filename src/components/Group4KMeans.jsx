@@ -1,10 +1,10 @@
 import React from 'react';
 import { PieChart, CheckCircle2, Award, Activity, ShieldCheck, TrendingUp, Sliders } from 'lucide-react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, registerables } from 'chart.js';
+import { Chart, Line } from 'react-chartjs-2';
 import dashboardData from '../data/dashboard_data.json';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(...registerables);
 
 export default function Group4KMeans() {
   const { metrics, k_eval, centroids, segments } = dashboardData;
@@ -133,7 +133,7 @@ export default function Group4KMeans() {
           <span className="badge badge-teal">OPTIMAL K = 5 CONFIRMED</span>
         </div>
         <div style={{ height: '300px' }}>
-          <Line data={kChartData} options={kChartOptions} />
+          <Chart type="line" data={kChartData} options={kChartOptions} />
         </div>
       </div>
 

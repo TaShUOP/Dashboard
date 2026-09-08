@@ -1,10 +1,10 @@
 import React from 'react';
 import { Layers, Activity, Sliders, TrendingUp, Compass, BarChart } from 'lucide-react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, RadialLinearScale } from 'chart.js';
+import { Chart as ChartJS, registerables } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 import dashboardData from '../data/dashboard_data.json';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, RadialLinearScale);
+ChartJS.register(...registerables);
 
 export default function Group2EDA() {
   const { pca_loadings } = dashboardData;

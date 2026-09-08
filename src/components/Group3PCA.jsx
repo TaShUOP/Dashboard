@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Cpu, Activity, RotateCw, ZoomIn, ZoomOut, Filter, Info, ChevronRight } from 'lucide-react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, registerables } from 'chart.js';
+import { Chart, Line, Bar } from 'react-chartjs-2';
 import dashboardData from '../data/dashboard_data.json';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
+ChartJS.register(...registerables);
 
 export default function Group3PCA() {
   const { metrics, k_eval, pca_loadings, sample_points, segments } = dashboardData;
@@ -116,7 +116,7 @@ export default function Group3PCA() {
     datasets: [
       {
         type: 'bar',
-        label: 'Individual Explained Variance (%)',
+        label: 'Individual Variance (%)',
         data: explainedVariance.slice(0, 10),
         backgroundColor: 'rgba(0, 229, 255, 0.5)',
         borderColor: '#00E5FF',
@@ -242,7 +242,7 @@ export default function Group3PCA() {
             First 3 components capture <strong>59.39%</strong> total information.
           </p>
           <div style={{ flex: 1, minHeight: '280px' }}>
-            <Line data={screeChartData} options={screeOptions} />
+            <Chart type="bar" data={screeChartData} options={screeOptions} />
           </div>
         </div>
       </div>

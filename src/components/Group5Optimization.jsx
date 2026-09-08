@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Target, Zap, DollarSign, Calculator, ArrowRight, ShieldCheck, Download, Award, CheckCircle2, RefreshCw } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 import dashboardData from '../data/dashboard_data.json';
 
 export default function Group5Optimization() {
-  const { segments } = dashboardData;
+  const { segments, metrics } = dashboardData;
 
   // ROI Calculator State
   const [totalAnnualKWh, setTotalAnnualKWh] = useState(50000000); // 50M kWh default
@@ -13,11 +14,9 @@ export default function Group5Optimization() {
   // Savings calculation
   const totalAnnualCost = totalAnnualKWh * ratePerKWh;
   
-  // Segment weightings
   const currentSeg = segments.find(s => s.id === selectedSegmentId) || segments[1];
   const segCostShare = totalAnnualCost * (currentSeg.pct / 100);
 
-  // Savings percentages based on segment strategies
   const savingsPctMap = {
     0: 0.065, // 6.5% base low baseload
     1: 0.215, // 21.5% heavy industrial peak shaving
@@ -29,43 +28,139 @@ export default function Group5Optimization() {
   const estimatedSegmentSavings = segCostShare * (savingsPctMap[selectedSegmentId] || 0.15);
   const estimatedTotalPortfolioSavings = totalAnnualCost * 0.152; // ~15.2% overall portfolio savings
 
+  // Export Report as PDF using jsPDF
   const exportReport = () => {
-    const reportText = `
-================================================================================
-SIEMENS ENERGY — CONSUMER SEGMENTATION & OPTIMIZATION REPORT
-================================================================================
-Generated: ${new Date().toLocaleString()}
-Dataset: BDG2 Siemens Energy Portfolio (17,376 Cleaned Observations)
-Framework: PCA (3 Components, 59.39% Variance) + K-Means Clustering (K=5)
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
 
-MODEL EVALUATION METRICS:
-- Optimal Clusters (K): 5
-- Silhouette Score: 0.3481 (Peak Separation)
-- Davies-Bouldin Index: 1.0357 (Compactness)
-- Calinski-Harabasz Index: 8574.51 (Variance Ratio)
+    // Color Palette
+    const cyan = [0, 153, 153];
+    const darkBg = [11, 15, 23];
+    const darkCard = [20, 28, 42];
+    const textGray = [156, 163, 175];
+    const textWhite = [255, 255, 255];
+    const accentTeal = [0, 229, 255];
 
-CONSUMER SEGMENT PROFILES & TARGETED STRATEGIES:
-${segments.map(s => `
-[Cluster ${s.id}]: ${s.name} (${s.pct}% of Portfolio, ${s.count} facilities)
-- Key Profile: ${s.description}
-- Targeted Strategy: ${s.strategy}
-- Expected Efficiency Benefit: ${s.savings_est}
-`).join('\n')}
+    // Page 1 Header Banner
+    doc.setFillColor(...cyan);
+    doc.rect(0, 0, pageWidth, 28, 'F');
 
-ESTIMATED FINANCIAL IMPACT:
-- Simulated Portfolio Usage: ${totalAnnualKWh.toLocaleString()} kWh/yr
-- Average Electricity Tariff: $${ratePerKWh.toFixed(2)}/kWh
-- Estimated Annual Energy Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })} / year
-================================================================================
-    `;
+    doc.setTextColor(...textWhite);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('SIEMENS ENERGY — CONSUMER SEGMENTATION REPORT', 14, 14);
 
-    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Siemens_Energy_Segmentation_Report.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text(`Generated: ${new Date().toLocaleDateString()} | Dataset: BDG2 Siemens Portfolio (17,376 Rows)`, 14, 22);
+
+    let y = 36;
+
+    // Executive Summary Box
+    doc.setFillColor(...darkCard);
+    doc.rect(14, y, pageWidth - 28, 38, 'F');
+    doc.setDrawColor(...cyan);
+    doc.setLineWidth(0.5);
+    doc.rect(14, y, pageWidth - 28, 38, 'S');
+
+    doc.setTextColor(...accentTeal);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('EXECUTIVE KPI & MODEL EVALUATION METRICS', 20, y + 10);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...textWhite);
+    doc.text(`• Total Observations: ${metrics.total_observations.toLocaleString()}`, 20, y + 18);
+    doc.text(`• PCA Explained Variance: ${metrics.cumulative_explained_var}% (3 Components)`, 20, y + 24);
+    doc.text(`• Optimal Clusters (K): ${metrics.optimal_k}`, 20, y + 30);
+
+    doc.text(`• Silhouette Score: ${metrics.silhouette_score} (Highest Separation)`, 110, y + 18);
+    doc.text(`• Davies-Bouldin Index: ${metrics.davies_bouldin} (Compactness)`, 110, y + 24);
+    doc.text(`• Calinski-Harabasz: ${metrics.calinski_harabasz.toLocaleString()}`, 110, y + 30);
+
+    y += 46;
+
+    // Section 2: Simulated Financial Impact
+    doc.setFillColor(...darkCard);
+    doc.rect(14, y, pageWidth - 28, 32, 'F');
+    doc.setDrawColor(0, 229, 255);
+    doc.rect(14, y, pageWidth - 28, 32, 'S');
+
+    doc.setTextColor(...accentTeal);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('SIMULATED FINANCIAL SAVINGS & ROI ANALYSIS', 20, y + 9);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...textWhite);
+    doc.text(`• Portfolio Consumption: ${totalAnnualKWh.toLocaleString()} kWh/yr`, 20, y + 17);
+    doc.text(`• Electricity Tariff: $${ratePerKWh.toFixed(2)} / kWh`, 20, y + 23);
+    doc.text(`• Total Annual Cost: $${totalAnnualCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, 110, y + 17);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(52, 211, 153);
+    doc.text(`• Estimated Annual Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })} / yr (~15.2% reduction)`, 110, y + 23);
+
+    y += 40;
+
+    // Section 3: 5 Consumer Profiles & Strategies
+    doc.setTextColor(...darkBg);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('CONSUMER SEGMENTS & TARGETED OPTIMIZATION STRATEGIES', 14, y);
+    y += 6;
+
+    segments.forEach((seg, idx) => {
+      // Add page if needed
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.setFillColor(245, 247, 250);
+      doc.rect(14, y, pageWidth - 28, 32, 'F');
+      doc.setDrawColor(200, 200, 200);
+      doc.rect(14, y, pageWidth - 28, 32, 'S');
+
+      // Left bar color indicator
+      const r = parseInt(seg.color.slice(1, 3), 16) || 0;
+      const g = parseInt(seg.color.slice(3, 5), 16) || 153;
+      const b = parseInt(seg.color.slice(5, 7), 16) || 153;
+      doc.setFillColor(r, g, b);
+      doc.rect(14, y, 4, 32, 'F');
+
+      doc.setTextColor(11, 15, 23);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.text(`Cluster ${seg.id}: ${seg.name} (${seg.pct}% | ${seg.count.toLocaleString()} Facilities)`, 22, y + 8);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(70, 70, 70);
+      doc.text(`Profile: ${seg.description}`, 22, y + 15);
+      doc.text(`Siemens Strategy: ${seg.strategy}`, 22, y + 21);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(0, 153, 153);
+      doc.text(`Expected Savings: ${seg.savings_est}`, 22, y + 27);
+
+      y += 36;
+    });
+
+    // Page Numbers & Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Siemens Energy Consumer Segmentation Analytics — Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
+    }
+
+    // Save as PDF file
+    doc.save('Siemens_Energy_Segmentation_Report.pdf');
   };
 
   return (
@@ -89,7 +184,7 @@ ESTIMATED FINANCIAL IMPACT:
             </p>
           </div>
           <button className="btn-primary" onClick={exportReport}>
-            <Download size={18} /> Export Executive Report
+            <Download size={18} /> Export Executive PDF Report
           </button>
         </div>
       </div>

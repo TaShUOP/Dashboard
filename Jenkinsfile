@@ -11,6 +11,9 @@ pipeline {
         APP_NAME       = 'siemens-energy-dashboard'
         IMAGE_TAG      = "${env.BUILD_NUMBER ?: 'latest'}"
         CONTAINER_PORT = '8205'
+        // Disable BuildKit compatibility mismatch for legacy Python docker-compose v1
+        DOCKER_BUILDKIT = '0'
+        COMPOSE_DOCKER_CLI_BUILD = '0'
     }
 
     stages {
@@ -51,6 +54,7 @@ pipeline {
             steps {
                 echo "Running temporary container health verification on port ${CONTAINER_PORT}..."
                 script {
+                    sh "docker rm -f ${APP_NAME}-test 2>/dev/null || true"
                     sh "docker run -d --name ${APP_NAME}-test -p ${CONTAINER_PORT}:80 ${APP_NAME}:${IMAGE_TAG}"
                     sleep 5
                     sh "curl -f http://localhost:${CONTAINER_PORT}/ || wget --quiet --tries=1 --spider http://localhost:${CONTAINER_PORT}/"
@@ -61,9 +65,13 @@ pipeline {
 
         stage('Deploy Container') {
             steps {
-                echo "Deploying production container via docker-compose on port ${CONTAINER_PORT}..."
+                echo "Deploying production container via Docker Compose..."
                 script {
-                    sh "docker-compose up -d --build"
+                    // Remove existing container first to prevent legacy python docker-compose v1 KeyError: 'ContainerConfig'
+                    sh "docker-compose down 2>/dev/null || docker compose down 2>/dev/null || true"
+                    
+                    // Try Docker Compose V2 first, fallback to V1
+                    sh "docker compose up -d --build 2>/dev/null || docker-compose up -d --build"
                 }
             }
         }

@@ -4,15 +4,13 @@ pipeline {
     options {
         timeout(time: 30, unit: 'MINUTES')
         retry(2)
-        timestamps()
-        ansiColor('xterm')
+        disableConcurrentBuilds()
     }
 
     environment {
-        APP_NAME     = 'siemens-energy-dashboard'
-        IMAGE_TAG    = "${env.BUILD_NUMBER ?: 'latest'}"
+        APP_NAME       = 'siemens-energy-dashboard'
+        IMAGE_TAG      = "${env.BUILD_NUMBER ?: 'latest'}"
         CONTAINER_PORT = '3000'
-        REGISTRY     = 'siemens-energy'
     }
 
     stages {

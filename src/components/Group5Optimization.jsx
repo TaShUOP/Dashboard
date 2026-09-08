@@ -28,10 +28,12 @@ export default function Group5Optimization() {
   const estimatedSegmentSavings = segCostShare * (savingsPctMap[selectedSegmentId] || 0.15);
   const estimatedTotalPortfolioSavings = totalAnnualCost * 0.152; // ~15.2% overall portfolio savings
 
-  // Export Report as PDF using jsPDF
+  // Export Report as PDF using jsPDF with precise text wrapping & dynamic box sizing
   const exportReport = () => {
     const doc = new jsPDF('portrait', 'mm', 'a4');
-    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
+    const margin = 14;
+    const contentWidth = pageWidth - margin * 2; // 182mm
 
     // Color Palette
     const cyan = [0, 153, 153];
@@ -43,123 +45,165 @@ export default function Group5Optimization() {
 
     // Page 1 Header Banner
     doc.setFillColor(...cyan);
-    doc.rect(0, 0, pageWidth, 28, 'F');
+    doc.rect(0, 0, pageWidth, 26, 'F');
 
     doc.setTextColor(...textWhite);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.text('SIEMENS ENERGY — CONSUMER SEGMENTATION REPORT', 14, 14);
+    doc.setFontSize(15);
+    doc.text('SIEMENS ENERGY — CONSUMER SEGMENTATION REPORT', margin, 13);
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text(`Generated: ${new Date().toLocaleDateString()} | Dataset: BDG2 Siemens Portfolio (17,376 Rows)`, 14, 22);
+    doc.setFontSize(8.5);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}  |  Dataset: BDG2 Siemens Portfolio (17,376 Cleaned Rows)`, margin, 21);
 
-    let y = 36;
+    let y = 32;
 
-    // Executive Summary Box
+    // Section 1: Executive KPI Metrics Box
+    const kpiBoxHeight = 36;
     doc.setFillColor(...darkCard);
-    doc.rect(14, y, pageWidth - 28, 38, 'F');
+    doc.rect(margin, y, contentWidth, kpiBoxHeight, 'F');
     doc.setDrawColor(...cyan);
-    doc.setLineWidth(0.5);
-    doc.rect(14, y, pageWidth - 28, 38, 'S');
+    doc.setLineWidth(0.4);
+    doc.rect(margin, y, contentWidth, kpiBoxHeight, 'S');
 
     doc.setTextColor(...accentTeal);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text('EXECUTIVE KPI & MODEL EVALUATION METRICS', 20, y + 10);
+    doc.setFontSize(10);
+    doc.text('EXECUTIVE KPI & MODEL EVALUATION METRICS', margin + 6, y + 8);
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setTextColor(...textWhite);
-    doc.text(`• Total Observations: ${metrics.total_observations.toLocaleString()}`, 20, y + 18);
-    doc.text(`• PCA Explained Variance: ${metrics.cumulative_explained_var}% (3 Components)`, 20, y + 24);
-    doc.text(`• Optimal Clusters (K): ${metrics.optimal_k}`, 20, y + 30);
+    doc.text(`• Total Observations: ${metrics.total_observations.toLocaleString()}`, margin + 6, y + 16);
+    doc.text(`• PCA Explained Variance: ${metrics.cumulative_explained_var}% (3 PCs)`, margin + 6, y + 22);
+    doc.text(`• Optimal Clusters (K): ${metrics.optimal_k}`, margin + 6, y + 28);
 
-    doc.text(`• Silhouette Score: ${metrics.silhouette_score} (Highest Separation)`, 110, y + 18);
-    doc.text(`• Davies-Bouldin Index: ${metrics.davies_bouldin} (Compactness)`, 110, y + 24);
-    doc.text(`• Calinski-Harabasz: ${metrics.calinski_harabasz.toLocaleString()}`, 110, y + 30);
+    doc.text(`• Silhouette Score: ${metrics.silhouette_score} (Highest Separation)`, margin + 95, y + 16);
+    doc.text(`• Davies-Bouldin Index: ${metrics.davies_bouldin} (Compactness)`, margin + 95, y + 22);
+    doc.text(`• Calinski-Harabasz: ${metrics.calinski_harabasz.toLocaleString()}`, margin + 95, y + 28);
 
-    y += 46;
+    y += kpiBoxHeight + 8;
 
-    // Section 2: Simulated Financial Impact
+    // Section 2: Simulated Financial Impact Box (Wrapped Text)
+    const roiBoxHeight = 36;
     doc.setFillColor(...darkCard);
-    doc.rect(14, y, pageWidth - 28, 32, 'F');
+    doc.rect(margin, y, contentWidth, roiBoxHeight, 'F');
     doc.setDrawColor(0, 229, 255);
-    doc.rect(14, y, pageWidth - 28, 32, 'S');
+    doc.setLineWidth(0.4);
+    doc.rect(margin, y, contentWidth, roiBoxHeight, 'S');
 
     doc.setTextColor(...accentTeal);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text('SIMULATED FINANCIAL SAVINGS & ROI ANALYSIS', 20, y + 9);
+    doc.setFontSize(10);
+    doc.text('SIMULATED FINANCIAL SAVINGS & ROI ANALYSIS', margin + 6, y + 8);
 
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setTextColor(...textWhite);
-    doc.text(`• Portfolio Consumption: ${totalAnnualKWh.toLocaleString()} kWh/yr`, 20, y + 17);
-    doc.text(`• Electricity Tariff: $${ratePerKWh.toFixed(2)} / kWh`, 20, y + 23);
-    doc.text(`• Total Annual Cost: $${totalAnnualCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, 110, y + 17);
+    doc.text(`• Portfolio Consumption: ${totalAnnualKWh.toLocaleString()} kWh/yr`, margin + 6, y + 17);
+    doc.text(`• Electricity Tariff: $${ratePerKWh.toFixed(2)} / kWh`, margin + 6, y + 24);
 
+    doc.text(`• Total Annual Cost: $${totalAnnualCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, margin + 95, y + 17);
+
+    // Split long savings text into max 80mm width
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(52, 211, 153);
-    doc.text(`• Estimated Annual Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })} / yr (~15.2% reduction)`, 110, y + 23);
+    const savingsText = `• Est. Annual Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}/yr (~15.2%)`;
+    const wrappedSavings = doc.splitTextToSize(savingsText, 82);
+    doc.text(wrappedSavings, margin + 95, y + 24);
 
-    y += 40;
+    y += roiBoxHeight + 10;
 
-    // Section 3: 5 Consumer Profiles & Strategies
+    // Section 3: 5 Consumer Profiles & Strategies Header
     doc.setTextColor(...darkBg);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text('CONSUMER SEGMENTS & TARGETED OPTIMIZATION STRATEGIES', 14, y);
+    doc.setFontSize(11);
+    doc.text('CONSUMER SEGMENTS & TARGETED OPTIMIZATION STRATEGIES', margin, y);
     y += 6;
 
-    segments.forEach((seg, idx) => {
-      // Add page if needed
-      if (y > 250) {
+    const maxTextWidth = contentWidth - 14; // 168mm text printable width
+
+    segments.forEach((seg) => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+
+      // Split long text paragraphs to fit inside box
+      const profileText = `Profile: ${seg.description}`;
+      const profileLines = doc.splitTextToSize(profileText, maxTextWidth);
+
+      const strategyText = `Siemens Strategy: ${seg.strategy}`;
+      const strategyLines = doc.splitTextToSize(strategyText, maxTextWidth);
+
+      const lineHeight = 3.8;
+      const cardHeight = 14 + (profileLines.length * lineHeight) + (strategyLines.length * lineHeight) + 6;
+
+      // Page break check if card exceeds bottom margin (275mm)
+      if (y + cardHeight > 275) {
         doc.addPage();
-        y = 20;
+        y = 16;
       }
 
+      // Draw Card Outer Box
       doc.setFillColor(245, 247, 250);
-      doc.rect(14, y, pageWidth - 28, 32, 'F');
-      doc.setDrawColor(200, 200, 200);
-      doc.rect(14, y, pageWidth - 28, 32, 'S');
+      doc.rect(margin, y, contentWidth, cardHeight, 'F');
+      doc.setDrawColor(210, 215, 225);
+      doc.setLineWidth(0.3);
+      doc.rect(margin, y, contentWidth, cardHeight, 'S');
 
-      // Left bar color indicator
+      // Left Accent Strip Color
       const r = parseInt(seg.color.slice(1, 3), 16) || 0;
       const g = parseInt(seg.color.slice(3, 5), 16) || 153;
       const b = parseInt(seg.color.slice(5, 7), 16) || 153;
       doc.setFillColor(r, g, b);
-      doc.rect(14, y, 4, 32, 'F');
+      doc.rect(margin, y, 4, cardHeight, 'F');
 
+      // Card Title
       doc.setTextColor(11, 15, 23);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.text(`Cluster ${seg.id}: ${seg.name} (${seg.pct}% | ${seg.count.toLocaleString()} Facilities)`, 22, y + 8);
+      doc.setFontSize(9.5);
+      doc.text(`Cluster ${seg.id}: ${seg.name} (${seg.pct}% | ${seg.count.toLocaleString()} Facilities)`, margin + 8, y + 6);
 
+      // Card Body Paragraphs
+      let textY = y + 11;
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(70, 70, 70);
-      doc.text(`Profile: ${seg.description}`, 22, y + 15);
-      doc.text(`Siemens Strategy: ${seg.strategy}`, 22, y + 21);
+      doc.setFontSize(8);
+      doc.setTextColor(60, 65, 75);
 
+      // Render wrapped profile lines
+      profileLines.forEach(line => {
+        doc.text(line, margin + 8, textY);
+        textY += lineHeight;
+      });
+
+      textY += 1;
+
+      // Render wrapped strategy lines
+      strategyLines.forEach(line => {
+        doc.text(line, margin + 8, textY);
+        textY += lineHeight;
+      });
+
+      textY += 2;
+
+      // Render Savings Highlight Line
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(0, 153, 153);
-      doc.text(`Expected Savings: ${seg.savings_est}`, 22, y + 27);
+      doc.setTextColor(0, 140, 140);
+      doc.text(`Expected Savings: ${seg.savings_est}`, margin + 8, textY);
 
-      y += 36;
+      y += cardHeight + 5; // Gap between cards
     });
 
-    // Page Numbers & Footer
+    // Page Numbers & Footer on all pages
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
+      doc.setFontSize(7.5);
       doc.setTextColor(150, 150, 150);
-      doc.text(`Siemens Energy Consumer Segmentation Analytics — Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
+      doc.text(`Siemens Energy Consumer Segmentation Analytics Report  |  Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
     }
 
-    // Save as PDF file
+    // Save PDF
     doc.save('Siemens_Energy_Segmentation_Report.pdf');
   };
 

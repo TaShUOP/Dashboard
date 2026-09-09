@@ -18,18 +18,18 @@ export default function OverviewTab({ setActiveTab }) {
 
   const kpis = [
     { title: 'Total Consumers Analyzed', value: metrics.total_consumers.toLocaleString(), label: 'Aggregated facility profiles', icon: Database, color: 'var(--fuchsia-pink)' },
-    { title: 'Optimal Clusters (K)', value: metrics.optimal_k, label: 'K-Means Silhouette maximum', icon: PieChart, color: '#A78BFA' },
-    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 4 Principal Components', icon: Cpu, color: 'var(--siemens-bright)' },
-    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Peak cluster separation (K=2)', icon: Award, color: '#FF66C4' },
-    { title: 'Davies-Bouldin Index', value: metrics.davies_bouldin, label: 'Cluster compactness (lower=better)', icon: ShieldCheck, color: '#34D399' },
-    { title: 'Calinski-Harabasz', value: metrics.calinski_harabasz.toLocaleString(), label: 'Variance ratio criterion', icon: TrendingUp, color: '#F87171' },
+    { title: 'Optimal Clusters (K)', value: metrics.optimal_k, label: 'K-Means Silhouette maximum', icon: PieChart, color: '#9333EA' },
+    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 4 Principal Components', icon: Cpu, color: 'var(--fuchsia-neon)' },
+    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Peak cluster separation (K=2)', icon: Award, color: '#D97706' },
+    { title: 'Davies-Bouldin Index', value: metrics.davies_bouldin, label: 'Cluster compactness (lower=better)', icon: ShieldCheck, color: '#059669' },
+    { title: 'Calinski-Harabasz', value: metrics.calinski_harabasz.toLocaleString(), label: 'Variance ratio criterion', icon: TrendingUp, color: '#E11D48' },
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Banner */}
       <div className="glass-card" style={{
-        background: 'linear-gradient(135deg, rgba(255, 0, 127, 0.22) 0%, rgba(0, 153, 153, 0.15) 50%, rgba(11, 15, 23, 0.9) 100%)',
+        background: 'linear-gradient(135deg, #FFE6F2 0%, #FFF0F6 50%, #FFFFFF 100%)',
         border: '1px solid rgba(255, 0, 127, 0.3)',
         position: 'relative',
         overflow: 'hidden'
@@ -40,7 +40,7 @@ export default function OverviewTab({ setActiveTab }) {
               <span className="badge badge-fuchsia">UPDATED DATASET PIPELINE ACTIVE</span>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>BDG2 Siemens Energy Portfolio (1,488 Consumers)</span>
             </div>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem', color: '#0F172A' }}>
               Consumer Energy Consumption Segmentation Dashboard
             </h2>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '850px', fontSize: '0.95rem' }}>
@@ -58,7 +58,7 @@ export default function OverviewTab({ setActiveTab }) {
         {kpis.map((kpi, idx) => {
           const Icon = kpi.icon;
           return (
-            <div key={idx} className="glass-card glass-card-interactive">
+            <div key={idx} className="glass-card glass-card-interactive" style={{ borderLeft: `4px solid ${kpi.color}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
                   {kpi.title}
@@ -66,13 +66,13 @@ export default function OverviewTab({ setActiveTab }) {
                 <div style={{
                   padding: '0.5rem',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: 'var(--fuchsia-light)',
                   color: kpi.color
                 }}>
                   <Icon size={20} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#FFF', letterSpacing: '-0.02em' }}>
+              <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
                 {kpi.value}
               </div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
@@ -96,15 +96,15 @@ export default function OverviewTab({ setActiveTab }) {
             {segments.map(seg => (
               <div key={seg.id}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginBottom: '0.35rem' }}>
-                  <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0F172A' }}>
                     <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: seg.color }}></span>
                     Cluster {seg.id}: {seg.name}
                   </span>
                   <span style={{ color: 'var(--text-secondary)' }}>
-                    <strong>{seg.count.toLocaleString()}</strong> ({seg.pct}%)
+                    <strong style={{ color: '#0F172A' }}>{seg.count.toLocaleString()}</strong> ({seg.pct}%)
                   </span>
                 </div>
-                <div style={{ width: '100%', height: '8px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: '100%', height: '8px', background: '#F1F5F9', borderRadius: '4px', overflow: 'hidden' }}>
                   <div style={{
                     width: `${seg.pct}%`,
                     height: '100%',
@@ -140,7 +140,7 @@ export default function OverviewTab({ setActiveTab }) {
                   gap: '0.85rem',
                   padding: '0.65rem 0.85rem',
                   borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.03)',
+                  background: '#F8FAFC',
                   border: '1px solid var(--border-color)',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
@@ -150,7 +150,7 @@ export default function OverviewTab({ setActiveTab }) {
                 <div style={{
                   padding: '0.35rem 0.6rem',
                   borderRadius: '6px',
-                  background: 'rgba(255, 0, 127, 0.15)',
+                  background: 'var(--fuchsia-light)',
                   color: 'var(--fuchsia-neon)',
                   fontWeight: 700,
                   fontSize: '0.75rem',
@@ -159,7 +159,7 @@ export default function OverviewTab({ setActiveTab }) {
                   {step.g}
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>{step.title}</h4>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0F172A' }}>{step.title}</h4>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>{step.desc}</p>
                 </div>
               </div>

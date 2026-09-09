@@ -20,7 +20,7 @@ export default function Group3PCA() {
   const explainedVariance = [41.25, 18.60, 12.40, 8.15];
   const cumulativeVariance = [41.25, 59.85, 72.25, 80.40];
 
-  // Canvas 3D Scatter Plot Renderer
+  // Canvas 3D Scatter Plot Renderer (White Theme Compatible)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -30,8 +30,8 @@ export default function Group3PCA() {
 
     ctx.clearRect(0, 0, width, height);
 
-    // Draw background grid
-    ctx.fillStyle = '#0E1420';
+    // Light Background
+    ctx.fillStyle = '#F8FAFC';
     ctx.fillRect(0, 0, width, height);
 
     // Filter points based on cluster selection
@@ -51,9 +51,9 @@ export default function Group3PCA() {
 
     // Draw coordinate axes
     const axes = [
-      { name: 'PC1 (Magnitude)', x: 4, y: 0, z: 0, color: '#00E5FF' },
-      { name: 'PC2 (Ratios)', x: 0, y: 4, z: 0, color: '#8B5CF6' },
-      { name: 'PC3 (Peak Hour)', x: 0, y: 0, z: 4, color: '#10B981' }
+      { name: 'PC1 (Magnitude)', x: 4, y: 0, z: 0, color: '#FF007F' },
+      { name: 'PC2 (Ratios)', x: 0, y: 4, z: 0, color: '#9333EA' },
+      { name: 'PC3 (Peak Hour)', x: 0, y: 0, z: 4, color: '#059669' }
     ];
 
     axes.forEach(axis => {
@@ -73,14 +73,14 @@ export default function Group3PCA() {
       ctx.stroke();
 
       ctx.fillStyle = axis.color;
-      ctx.font = '11px Outfit, sans-serif';
+      ctx.font = 'bold 11px Outfit, sans-serif';
       ctx.fillText(axis.name, px + 5, py + 5);
     });
 
     // Draw Sample Points (1,488 points)
     const clusterColors = {
       0: '#3B82F6',
-      1: '#EF4444'
+      1: '#FF007F'
     };
 
     filteredPoints.forEach(pt => {
@@ -93,9 +93,9 @@ export default function Group3PCA() {
       const py = centerY - y1 * scale;
 
       ctx.beginPath();
-      ctx.arc(px, py, 2.5 * zoom, 0, 2 * Math.PI);
-      ctx.fillStyle = clusterColors[pt.cluster] || '#00E5FF';
-      ctx.globalAlpha = 0.75;
+      ctx.arc(px, py, 2.8 * zoom, 0, 2 * Math.PI);
+      ctx.fillStyle = clusterColors[pt.cluster] || '#FF007F';
+      ctx.globalAlpha = 0.8;
       ctx.fill();
     });
 
@@ -111,8 +111,8 @@ export default function Group3PCA() {
         type: 'bar',
         label: 'Individual Variance (%)',
         data: explainedVariance,
-        backgroundColor: 'rgba(0, 229, 255, 0.5)',
-        borderColor: '#00E5FF',
+        backgroundColor: 'rgba(255, 0, 127, 0.6)',
+        borderColor: '#FF007F',
         borderWidth: 1,
         yAxisID: 'y'
       },
@@ -120,8 +120,8 @@ export default function Group3PCA() {
         type: 'line',
         label: 'Cumulative Variance (%)',
         data: cumulativeVariance,
-        borderColor: '#8B5CF6',
-        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+        borderColor: '#9333EA',
+        backgroundColor: 'rgba(147, 51, 234, 0.1)',
         borderWidth: 2,
         tension: 0.3,
         yAxisID: 'y1'
@@ -133,26 +133,26 @@ export default function Group3PCA() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { color: '#9CA3AF', font: { family: 'Inter', size: 11 } } },
-      tooltip: { backgroundColor: 'rgba(11, 15, 23, 0.95)', titleColor: '#FFF' }
+      legend: { labels: { color: '#475569', font: { family: 'Inter', size: 11 } } },
+      tooltip: { backgroundColor: '#FFFFFF', titleColor: '#0F172A', bodyColor: '#FF007F', borderColor: 'rgba(255, 0, 127, 0.2)', borderWidth: 1 }
     },
     scales: {
-      x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9CA3AF' } },
+      x: { grid: { color: 'rgba(255, 0, 127, 0.05)' }, ticks: { color: '#475569' } },
       y: {
         type: 'linear',
         display: true,
         position: 'left',
-        title: { display: true, text: 'Variance Ratio (%)', color: '#00E5FF' },
-        grid: { color: 'rgba(255, 255, 255, 0.05)' },
-        ticks: { color: '#9CA3AF' }
+        title: { display: true, text: 'Variance Ratio (%)', color: '#FF007F' },
+        grid: { color: 'rgba(255, 0, 127, 0.05)' },
+        ticks: { color: '#475569' }
       },
       y1: {
         type: 'linear',
         display: true,
         position: 'right',
-        title: { display: true, text: 'Cumulative (%)', color: '#8B5CF6' },
+        title: { display: true, text: 'Cumulative (%)', color: '#9333EA' },
         grid: { drawOnChartArea: false },
-        ticks: { color: '#9CA3AF' }
+        ticks: { color: '#475569' }
       }
     }
   };
@@ -162,8 +162,8 @@ export default function Group3PCA() {
       {/* Header Card */}
       <div className="glass-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-          <Cpu size={24} color="var(--siemens-bright)" />
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Group 3 — Principal Component Analysis (PCA) Studio</h2>
+          <Cpu size={24} color="var(--fuchsia-pink)" />
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A' }}>Group 3 — Principal Component Analysis (PCA) Studio</h2>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
           Dimensionality reduction transforming 16 consumption features into 4 Principal Components capturing <strong>80.40%</strong> of total dataset variance across 1,488 building consumers.
@@ -176,7 +176,7 @@ export default function Group3PCA() {
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Interactive 3D PCA Scatter Map (1,488 Consumers)</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0F172A' }}>Interactive 3D PCA Scatter Map (1,488 Consumers)</h3>
               <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>PC1 (41.3%) vs PC2 (18.6%) vs PC3 (12.4%)</span>
             </div>
 
@@ -185,18 +185,18 @@ export default function Group3PCA() {
                 value={selectedClusterFilter}
                 onChange={e => setSelectedClusterFilter(e.target.value)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: '#F8FAFC',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
                   padding: '0.35rem 0.65rem',
-                  color: '#FFF',
+                  color: '#0F172A',
                   fontSize: '0.8rem',
                   outline: 'none'
                 }}
               >
-                <option value="ALL" style={{ background: '#0B0F17' }}>Filter: All Clusters</option>
+                <option value="ALL">Filter: All Clusters</option>
                 {segments.map(s => (
-                  <option key={s.id} value={s.id} style={{ background: '#0B0F17' }}>Cluster {s.id}: {s.name}</option>
+                  <option key={s.id} value={s.id}>Cluster {s.id}: {s.name}</option>
                 ))}
               </select>
             </div>
@@ -220,14 +220,14 @@ export default function Group3PCA() {
           </div>
 
           {/* Canvas Box */}
-          <div style={{ position: 'relative', width: '100%', height: '320px', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+          <div style={{ position: 'relative', width: '100%', height: '320px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
             <canvas ref={canvasRef} width={600} height={320} style={{ width: '100%', height: '100%', display: 'block' }} />
           </div>
         </div>
 
         {/* Scree Plot */}
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem', color: '#0F172A' }}>
             Scree Plot & Cumulative Variance
           </h3>
           <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
@@ -241,7 +241,7 @@ export default function Group3PCA() {
 
       {/* PCA Loading Matrix & Factor Drivers */}
       <div className="glass-card">
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: '#0F172A' }}>
           PCA Loading Matrix & Principal Component Drivers
         </h3>
         <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
@@ -252,7 +252,7 @@ export default function Group3PCA() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)', textAlign: 'left' }}>
+              <tr style={{ borderBottom: '2px solid rgba(255, 0, 127, 0.2)', background: 'var(--fuchsia-light)', color: 'var(--fuchsia-deep)', textAlign: 'left' }}>
                 <th style={{ padding: '0.65rem 1rem' }}>Feature Variable</th>
                 <th style={{ padding: '0.65rem 1rem' }}>PC1 Loading (41.3%)</th>
                 <th style={{ padding: '0.65rem 1rem' }}>PC2 Loading (18.6%)</th>
@@ -262,20 +262,20 @@ export default function Group3PCA() {
             </thead>
             <tbody>
               {pca_loadings.map((row, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.03)' }}>
-                  <td style={{ padding: '0.65rem 1rem', fontFamily: 'monospace', fontWeight: 600, color: 'var(--text-primary)' }}>
+                <tr key={idx} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                  <td style={{ padding: '0.65rem 1rem', fontFamily: 'monospace', fontWeight: 600, color: '#0F172A' }}>
                     {row.feature}
                   </td>
-                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC1) > 0.3 ? 'var(--siemens-bright)' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC1) > 0.3 ? 700 : 400 }}>
+                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC1) > 0.3 ? 'var(--fuchsia-pink)' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC1) > 0.3 ? 700 : 400 }}>
                     {row.PC1 > 0 ? `+${row.PC1.toFixed(4)}` : row.PC1.toFixed(4)}
                   </td>
-                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC2) > 0.3 ? '#A78BFA' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC2) > 0.3 ? 700 : 400 }}>
+                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC2) > 0.3 ? '#9333EA' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC2) > 0.3 ? 700 : 400 }}>
                     {row.PC2 > 0 ? `+${row.PC2.toFixed(4)}` : row.PC2.toFixed(4)}
                   </td>
-                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC3) > 0.3 ? '#34D399' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC3) > 0.3 ? 700 : 400 }}>
+                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC3) > 0.3 ? '#059669' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC3) > 0.3 ? 700 : 400 }}>
                     {row.PC3 > 0 ? `+${row.PC3.toFixed(4)}` : row.PC3.toFixed(4)}
                   </td>
-                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC4) > 0.3 ? '#F59E0B' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC4) > 0.3 ? 700 : 400 }}>
+                  <td style={{ padding: '0.65rem 1rem', color: Math.abs(row.PC4) > 0.3 ? '#D97706' : 'var(--text-secondary)', fontWeight: Math.abs(row.PC4) > 0.3 ? 700 : 400 }}>
                     {row.PC4 > 0 ? `+${row.PC4.toFixed(4)}` : row.PC4.toFixed(4)}
                   </td>
                 </tr>

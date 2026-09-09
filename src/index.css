@@ -1,28 +1,36 @@
 :root {
-  --bg-dark: #090D16;
-  --bg-card: rgba(18, 25, 38, 0.78);
-  --bg-card-hover: rgba(26, 36, 54, 0.88);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-highlight: rgba(255, 0, 127, 0.4);
+  --bg-dark: #FFFFFF;
+  --bg-page: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFF5F9;
+  --border-color: rgba(255, 0, 127, 0.18);
+  --border-highlight: rgba(255, 0, 127, 0.5);
   
-  /* Fuchsia Pink Design Tokens */
+  /* Fuchsia Pink & Pink Gradient Design Tokens */
   --fuchsia-pink: #FF007F;
-  --fuchsia-deep: #D10068;
-  --fuchsia-bright: #FF3399;
-  --fuchsia-neon: #FF66C4;
-  --fuchsia-glow: rgba(255, 0, 127, 0.35);
+  --fuchsia-deep: #C40062;
+  --fuchsia-bright: #FF1493;
+  --fuchsia-neon: #E6006F;
+  --fuchsia-soft: #FF66C4;
+  --fuchsia-light: #FFE6F2;
+  --fuchsia-glow: rgba(255, 0, 127, 0.2);
   
-  --siemens-teal: #009999;
-  --siemens-bright: #00E5FF;
-  --siemens-accent: #00FFB2;
-  --accent-purple: #8B5CF6;
-  --accent-amber: #F59E0B;
-  --accent-rose: #EF4444;
-  --accent-emerald: #10B981;
+  --pink-gradient-main: linear-gradient(135deg, #FF007F 0%, #FF52A1 50%, #FF7AB8 100%);
+  --pink-gradient-card: linear-gradient(135deg, rgba(255, 0, 127, 0.06) 0%, rgba(255, 102, 196, 0.03) 100%);
+  --pink-gradient-btn: linear-gradient(135deg, #FF007F 0%, #D10068 100%);
+  --pink-gradient-hover: linear-gradient(135deg, #FF3399 0%, #FF007F 100%);
   
-  --text-primary: #F3F4F6;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
+  --siemens-teal: #FF007F;
+  --siemens-bright: #E6006F;
+  --siemens-accent: #FF3399;
+  --accent-purple: #9333EA;
+  --accent-amber: #D97706;
+  --accent-rose: #E11D48;
+  --accent-emerald: #059669;
+  
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
   
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -32,7 +40,8 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
   
-  --shadow-glow: 0 0 24px rgba(255, 0, 127, 0.25);
+  --shadow-card: 0 4px 20px rgba(255, 0, 127, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 8px 30px rgba(255, 0, 127, 0.2);
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
 }
@@ -44,30 +53,29 @@
 }
 
 body {
-  background-color: var(--bg-dark);
+  background-color: var(--bg-page);
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.5;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(255, 0, 127, 0.14) 0%, transparent 45%),
-    radial-gradient(circle at 85% 75%, rgba(0, 229, 255, 0.10) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%);
+    radial-gradient(circle at 10% 10%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(255, 102, 196, 0.08) 0%, transparent 40%);
   min-height: 100vh;
 }
 
-/* Custom Scrollbar with Fuchsia Touch */
+/* Custom Scrollbar with Pink Accent */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(9, 13, 22, 0.8);
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 127, 0.3);
+  background: rgba(255, 0, 127, 0.35);
   border-radius: 4px;
 }
 
@@ -75,26 +83,25 @@ body {
   background: var(--fuchsia-pink);
 }
 
-/* Glassmorphism Card Utility */
+/* White Glassmorphism Card Utility */
 .glass-card {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
+  box-shadow: var(--shadow-card);
   transition: all var(--transition-normal);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 0, 127, 0.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 0, 127, 0.35);
+  box-shadow: var(--shadow-hover);
 }
 
 .glass-card-interactive:hover {
   transform: translateY(-2px);
-  border-color: var(--border-highlight);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--fuchsia-pink);
+  box-shadow: var(--shadow-hover);
 }
 
 /* Typography Headings */
@@ -118,44 +125,44 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .badge-fuchsia {
-  background: rgba(255, 0, 127, 0.15);
+  background: var(--fuchsia-light);
   color: var(--fuchsia-neon);
   border: 1px solid rgba(255, 0, 127, 0.35);
 }
 
 .badge-teal {
-  background: rgba(0, 229, 255, 0.12);
-  color: var(--siemens-bright);
-  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: #E0F2FE;
+  color: #0284C7;
+  border: 1px solid #7DD3FC;
 }
 
 .badge-purple {
-  background: rgba(139, 92, 246, 0.12);
-  color: #A78BFA;
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: #F3E8FF;
+  color: #9333EA;
+  border: 1px solid #C084FC;
 }
 
 .badge-emerald {
-  background: rgba(16, 185, 129, 0.12);
-  color: #34D399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #6EE7B7;
 }
 
 .badge-amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: #FBBF24;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: #FEF3C7;
+  color: #D97706;
+  border: 1px solid #FCD34D;
 }
 
 .badge-rose {
-  background: rgba(239, 68, 68, 0.12);
-  color: #F87171;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: #FFE4E6;
+  color: #E11D48;
+  border: 1px solid #FDA4AF;
 }
 
 /* Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, var(--fuchsia-pink) 0%, #C40062 100%);
+  background: var(--pink-gradient-btn);
   color: #FFFFFF;
   border: none;
   border-radius: var(--radius-md);
@@ -172,13 +179,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #FF3399 0%, var(--fuchsia-pink) 100%);
+  background: var(--pink-gradient-hover);
   box-shadow: 0 6px 24px rgba(255, 0, 127, 0.5);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: #F1F5F9;
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -193,8 +200,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 0, 127, 0.12);
-  border-color: rgba(255, 0, 127, 0.3);
+  background: var(--fuchsia-light);
+  border-color: rgba(255, 0, 127, 0.4);
+  color: var(--fuchsia-neon);
 }
 
 /* Grid Layouts */

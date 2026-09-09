@@ -17,10 +17,10 @@ export default function OverviewTab({ setActiveTab }) {
   const { metrics, centroids, segments } = dashboardData;
 
   const kpis = [
-    { title: 'Total Consumer Records', value: metrics.total_observations.toLocaleString(), label: 'Standardized ML-ready rows', icon: Database, color: 'var(--siemens-bright)' },
+    { title: 'Total Consumers Analyzed', value: metrics.total_consumers.toLocaleString(), label: 'Aggregated facility profiles', icon: Database, color: 'var(--siemens-bright)' },
     { title: 'Optimal Clusters (K)', value: metrics.optimal_k, label: 'K-Means Silhouette maximum', icon: PieChart, color: '#A78BFA' },
-    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 3 Principal Components', icon: Cpu, color: 'var(--siemens-accent)' },
-    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Highest cluster separation', icon: Award, color: '#FBBF24' },
+    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 4 Principal Components', icon: Cpu, color: 'var(--siemens-accent)' },
+    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Peak cluster separation (K=2)', icon: Award, color: '#FBBF24' },
     { title: 'Davies-Bouldin Index', value: metrics.davies_bouldin, label: 'Cluster compactness (lower=better)', icon: ShieldCheck, color: '#34D399' },
     { title: 'Calinski-Harabasz', value: metrics.calinski_harabasz.toLocaleString(), label: 'Variance ratio criterion', icon: TrendingUp, color: '#F87171' },
   ];
@@ -37,14 +37,14 @@ export default function OverviewTab({ setActiveTab }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
-              <span className="badge badge-teal">GROUP 1 — 5 COMPLETE ANALYTICS PIPELINE</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>BDG2 Siemens Energy Portfolio</span>
+              <span className="badge badge-teal">UPDATED DATASET PIPELINE ACTIVE</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>BDG2 Siemens Energy Portfolio (1,488 Consumers)</span>
             </div>
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem' }}>
               Consumer Energy Consumption Segmentation Dashboard
             </h2>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '850px', fontSize: '0.95rem' }}>
-              End-to-end unsupervised machine learning framework integrating <strong>PCA dimensionality reduction</strong> and <strong>K-Means clustering</strong> to segment Siemens Energy building & facility consumers into 5 actionable operational profiles.
+              End-to-end unsupervised machine learning framework integrating <strong>PCA dimensionality reduction (80.40% variance)</strong> and <strong>K-Means clustering (K=2 optimal separation)</strong> to segment Siemens Energy building & facility consumers into actionable operational profiles.
             </p>
           </div>
           <button className="btn-primary" onClick={() => setActiveTab('group5')}>
@@ -89,7 +89,7 @@ export default function OverviewTab({ setActiveTab }) {
         <div className="glass-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Cluster Size Distribution</h3>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>K = 5 Consumer Segments</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>K = 2 Consumer Segments</span>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -125,11 +125,11 @@ export default function OverviewTab({ setActiveTab }) {
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             {[
-              { g: 'Group 1', title: 'Dataset & Data Preparation', desc: 'Ingested BDG2 Siemens metadata/consumption records. Cleaned missing values, removed duplicates, treated outliers, and established feature schemas.', tab: 'group1' },
-              { g: 'Group 2', title: 'EDA & Feature Engineering', desc: 'Created 20 features including 1h, 24h, 168h lags, 24h/7d rolling means, baseline differences, and cyclical sin/cos temporal variables. Applied StandardScaler.', tab: 'group2' },
-              { g: 'Group 3', title: 'PCA & Dimensionality Reduction', desc: 'Extracted 3 Principal Components capturing 59.39% cumulative variance. Computed PCA loadings for overall magnitude (PC1), weekly cycle (PC2), and diurnal rhythm (PC3).', tab: 'group3' },
-              { g: 'Group 4', title: 'K-Means & Model Evaluation', desc: 'Tested K=2..10. Selected K=5 based on max Silhouette score (0.3481). Evaluated via Davies-Bouldin (1.0357) and Calinski-Harabasz (8574.51).', tab: 'group4' },
-              { g: 'Group 5', title: 'Optimization & Dashboard Hub', desc: 'Formulated targeted Siemens Energy operational tactics (BESS peak shaving, Desigo CC automation, load shifts) with interactive energy savings calculator.', tab: 'group5' },
+              { g: 'Group 1', title: 'Dataset & Data Preparation', desc: 'Ingested BDG2 Siemens metadata (1,636), weather (331,166), and electricity consumption (17,544 readings × 1,489 buildings). Cleaned 2.47M missing values and 120k outliers.', tab: 'group1' },
+              { g: 'Group 2', title: 'EDA & Feature Engineering', desc: 'Aggregated consumption into 16 statistical features including mean, std, min, max, peak-to-average, weekday/weekend ratios, day/night ratios, and peak hour cyclical sin/cos.', tab: 'group2' },
+              { g: 'Group 3', title: 'PCA & Dimensionality Reduction', desc: 'Extracted 4 Principal Components capturing 80.40% cumulative variance. Computed PCA loadings for overall magnitude (PC1: 41.3%), operational shift (PC2: 18.6%), and peak hour timing (PC3: 12.4%).', tab: 'group3' },
+              { g: 'Group 4', title: 'K-Means & Model Evaluation', desc: 'Tested K=2..8. Confirmed Optimal K=2 with peak Silhouette score (0.3823). Evaluated via Davies-Bouldin (1.1245) and Calinski-Harabasz (3482.15).', tab: 'group4' },
+              { g: 'Group 5', title: 'Optimization & Dashboard Hub', desc: 'Formulated targeted Siemens Energy operational tactics (BESS peak shaving, Desigo CC automation, low-power standby schedules) with interactive ROI calculator & PDF exporter.', tab: 'group5' },
             ].map((step, idx) => (
               <div 
                 key={idx} 

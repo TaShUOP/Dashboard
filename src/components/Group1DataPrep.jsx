@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { Database, Filter, Search, CheckCircle, AlertTriangle, FileText, RefreshCw, BarChart2 } from 'lucide-react';
+import dashboardData from '../data/dashboard_data.json';
 
 export default function Group1DataPrep() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL');
 
+  const { raw_vs_cleaned } = dashboardData;
+
   const dataDictionary = [
-    { name: 'total_consumption', type: 'Float (Scaled)', cat: 'Target Meter', desc: 'Raw hourly energy consumption (kWh) standardized using z-score normalization.' },
-    { name: 'total_consumption_lag_1', type: 'Float (Scaled)', cat: 'Lag Feature', desc: 'Consumption recorded 1 hour prior to reference observation.' },
-    { name: 'total_consumption_lag_24', type: 'Float (Scaled)', cat: 'Lag Feature', desc: 'Consumption recorded 24 hours prior (same hour previous day).' },
-    { name: 'total_consumption_lag_168', type: 'Float (Scaled)', cat: 'Lag Feature', desc: 'Consumption recorded 168 hours prior (same hour previous week).' },
-    { name: 'total_consumption_rolling_mean_24', type: 'Float (Scaled)', cat: 'Rolling Stat', desc: '24-hour moving average consumption window to smooth out micro-spikes.' },
-    { name: 'total_consumption_rolling_mean_7d', type: 'Float (Scaled)', cat: 'Rolling Stat', desc: '7-day moving average consumption window for macro baseline trend.' },
-    { name: 'consumption_vs_hourly_baseline', type: 'Float (Scaled)', cat: 'Baseline Diff', desc: 'Difference between current consumption and mean consumption for that specific hour of day.' },
-    { name: 'consumption_change_1h', type: 'Float (Scaled)', cat: 'Delta', desc: 'Rate of change in consumption over 1 hour (d/dt).' },
-    { name: 'consumption_change_24h', type: 'Float (Scaled)', cat: 'Delta', desc: 'Rate of change in consumption compared to 24 hours ago.' },
-    { name: 'consumption_vs_hour_weekend_baseline', type: 'Float (Scaled)', cat: 'Baseline Diff', desc: 'Difference between consumption and baseline conditioned on weekday vs weekend.' },
-    { name: 'hour', type: 'Integer (0-23)', cat: 'Temporal', desc: 'Hour of day from 0 (midnight) to 23.' },
-    { name: 'day_of_week', type: 'Integer (0-6)', cat: 'Temporal', desc: 'Day of week index from 0 (Monday) to 6 (Sunday).' },
-    { name: 'month', type: 'Integer (1-12)', cat: 'Temporal', desc: 'Calendar month index.' },
-    { name: 'is_weekend', type: 'Binary (0/1)', cat: 'Temporal', desc: 'Indicator flag (1 for Saturday/Sunday, 0 for Monday-Friday).' },
-    { name: 'hour_sin / hour_cos', type: 'Float [-1, 1]', cat: 'Cyclical Math', desc: 'Trigonometric sine/cosine transformation of hour to preserve 23h -> 0h continuous periodicity.' },
-    { name: 'day_of_week_sin / cos', type: 'Float [-1, 1]', cat: 'Cyclical Math', desc: 'Trigonometric sine/cosine transformation of day of week.' },
-    { name: 'month_sin / cos', type: 'Float [-1, 1]', cat: 'Cyclical Math', desc: 'Trigonometric sine/cosine transformation of calendar month.' },
+    { name: 'mean_consumption', type: 'Float (kWh)', cat: 'Aggregate Stat', desc: 'Average hourly electricity consumption across the observation period.' },
+    { name: 'total_consumption', type: 'Float (kWh)', cat: 'Aggregate Stat', desc: 'Total cumulative energy consumption recorded for the building consumer.' },
+    { name: 'std_consumption', type: 'Float', cat: 'Variance Stat', desc: 'Standard deviation of hourly consumption, measuring load volatility.' },
+    { name: 'min_consumption', type: 'Float (kWh)', cat: 'Baseload Stat', desc: 'Minimum recorded hourly consumption, representing base standby load.' },
+    { name: 'max_consumption', type: 'Float (kWh)', cat: 'Peak Load Stat', desc: 'Maximum single-hour peak demand recorded.' },
+    { name: 'peak_to_average', type: 'Float Ratio', cat: 'Load Factor', desc: 'Ratio of max peak consumption to mean consumption (Max / Mean).' },
+    { name: 'weekday_mean', type: 'Float (kWh)', cat: 'Temporal Mean', desc: 'Average consumption during Monday-Friday operational hours.' },
+    { name: 'weekend_mean', type: 'Float (kWh)', cat: 'Temporal Mean', desc: 'Average consumption during Saturday-Sunday off-peak hours.' },
+    { name: 'day_mean', type: 'Float (kWh)', cat: 'Diurnal Stat', desc: 'Average daytime consumption (08:00 to 20:00).' },
+    { name: 'night_mean', type: 'Float (kWh)', cat: 'Diurnal Stat', desc: 'Average nighttime baseline consumption (20:00 to 08:00).' },
+    { name: 'weekday_weekend_ratio', type: 'Float Ratio', cat: 'Operational Ratio', desc: 'Ratio of weekday average to weekend average (Weekday Mean / Weekend Mean).' },
+    { name: 'day_night_ratio', type: 'Float Ratio', cat: 'Operational Ratio', desc: 'Ratio of daytime average to nighttime average (Day Mean / Night Mean).' },
+    { name: 'peak_hour_consumption', type: 'Float (kWh)', cat: 'Peak Demand', desc: 'Consumption recorded during the facility peak hour.' },
+    { name: 'hourly_mean_std', type: 'Float', cat: 'Variance Stat', desc: 'Standard deviation across 24 hourly mean profile buckets.' },
+    { name: 'peak_hour_sin / cos', type: 'Float [-1, 1]', cat: 'Cyclical Math', desc: 'Trigonometric sine/cosine transformation of facility peak hour.' },
   ];
 
   const filteredDict = dataDictionary.filter(item => {
@@ -32,7 +33,7 @@ export default function Group1DataPrep() {
     return matchesSearch && matchesCat;
   });
 
-  const categories = ['ALL', 'Target Meter', 'Lag Feature', 'Rolling Stat', 'Baseline Diff', 'Delta', 'Temporal', 'Cyclical Math'];
+  const categories = ['ALL', 'Aggregate Stat', 'Variance Stat', 'Baseload Stat', 'Peak Load Stat', 'Load Factor', 'Temporal Mean', 'Diurnal Stat', 'Operational Ratio', 'Cyclical Math'];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -47,62 +48,44 @@ export default function Group1DataPrep() {
         </p>
       </div>
 
-      {/* Raw vs Cleaned Dataset Comparison */}
-      <div className="grid-cols-2">
-        <div className="glass-card" style={{ borderLeft: '4px solid #EF4444' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <AlertTriangle size={18} color="#EF4444" /> Raw Ingested Dataset Audit
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.88rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Source Dataset</span>
-              <strong style={{ color: '#FFF' }}>Building Data Genome 2 (BDG2)</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Raw Ingested Records</span>
-              <strong style={{ color: '#FFF' }}>17,544 rows</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Missing Values Found</span>
-              <strong style={{ color: '#EF4444' }}>168 rows (0.95%) — Lag window gaps</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Duplicate Rows</span>
-              <strong style={{ color: '#FFF' }}>0 duplicates detected</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Unbounded Outliers</span>
-              <strong style={{ color: '#F59E0B' }}>Extreme meter spikes (&gt; 4 sigma)</strong>
-            </div>
-          </div>
-        </div>
+      {/* Raw vs Cleaned Dataset Comparison Audit Table */}
+      <div className="glass-card">
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+          Raw vs. Cleaned Dataset Audit Comparison
+        </h3>
+        <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+          Comprehensive summary of data cleaning, missing value imputation, and outlier treatment across all 3 source domains:
+        </p>
 
-        <div className="glass-card" style={{ borderLeft: '4px solid var(--siemens-bright)' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <CheckCircle size={18} color="var(--siemens-bright)" /> Cleaned ML-Ready Dataset
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.88rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Final ML Sample Count</span>
-              <strong style={{ color: 'var(--siemens-bright)' }}>17,376 cleaned rows</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Missing Values Remaining</span>
-              <strong style={{ color: '#34D399' }}>0 missing values (100% clean)</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Outlier Treatment</span>
-              <strong style={{ color: '#FFF' }}>IQR & Winsorization clipped at 99.5th %tile</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Feature Matrix Dimension</span>
-              <strong style={{ color: '#FFF' }}>20 Numerical Features</strong>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.4rem' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>Scaling Standard</span>
-              <strong style={{ color: 'var(--siemens-accent)' }}>StandardScaler (Mean=0.0, Std=1.0)</strong>
-            </div>
-          </div>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)', textAlign: 'left' }}>
+                <th style={{ padding: '0.75rem 1rem' }}>Dataset Domain</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Raw Dimension</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Cleaned Dimension</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Duplicates Dropped</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Raw Missing Values</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Cleaned Missing</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Outliers Treated</th>
+              </tr>
+            </thead>
+            <tbody>
+              {raw_vs_cleaned.map((row, idx) => (
+                <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: 'var(--siemens-bright)' }}>
+                    {row.dataset}
+                  </td>
+                  <td style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>{row.raw_dim}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#FFF', fontWeight: 600 }}>{row.cleaned_dim}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#34D399' }}>{row.duplicates}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#EF4444' }}>{row.raw_missing.toLocaleString()}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#34D399', fontWeight: 700 }}>{row.cleaned_missing.toLocaleString()}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#F59E0B' }}>{row.outliers.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -112,12 +95,11 @@ export default function Group1DataPrep() {
           <div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Data Dictionary & Variable Schema</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              Comprehensive schema defining target, lag, rolling, baseline, and cyclical features
+              16 aggregated features used for consumer segmentation
             </p>
           </div>
           
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            {/* Search Input */}
             <div style={{ position: 'relative' }}>
               <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
               <input
@@ -138,7 +120,6 @@ export default function Group1DataPrep() {
               />
             </div>
 
-            {/* Category Select */}
             <select
               value={filterType}
               onChange={e => setFilterType(e.target.value)}
@@ -159,7 +140,6 @@ export default function Group1DataPrep() {
           </div>
         </div>
 
-        {/* Data Dictionary Table */}
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
             <thead>
@@ -167,7 +147,7 @@ export default function Group1DataPrep() {
                 <th style={{ padding: '0.75rem 1rem' }}>Feature Variable Name</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Data Type</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Category</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Description & Behavioral Context</th>
+                <th style={{ padding: '0.75rem 1rem' }}>Description & Operational Context</th>
               </tr>
             </thead>
             <tbody>

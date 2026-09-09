@@ -9,7 +9,7 @@ export default function Group5Optimization() {
   // ROI Calculator State
   const [totalAnnualKWh, setTotalAnnualKWh] = useState(50000000); // 50M kWh default
   const [ratePerKWh, setRatePerKWh] = useState(0.14); // $0.14 / kWh default
-  const [selectedSegmentId, setSelectedSegmentId] = useState(1); // Default segment 1 Heavy Industrial
+  const [selectedSegmentId, setSelectedSegmentId] = useState(1); // Default segment 1 High-Volume
 
   // Savings calculation
   const totalAnnualCost = totalAnnualKWh * ratePerKWh;
@@ -18,17 +18,14 @@ export default function Group5Optimization() {
   const segCostShare = totalAnnualCost * (currentSeg.pct / 100);
 
   const savingsPctMap = {
-    0: 0.065, // 6.5% base low baseload
-    1: 0.215, // 21.5% heavy industrial peak shaving
-    2: 0.135, // 13.5% weekend shift
-    3: 0.175, // 17.5% office HVAC automation
-    4: 0.120, // 12.0% volatile load control
+    0: 0.095, // 9.5% low to moderate baseload efficiency
+    1: 0.215, // 21.5% high volume peak shaving & BESS
   };
 
   const estimatedSegmentSavings = segCostShare * (savingsPctMap[selectedSegmentId] || 0.15);
-  const estimatedTotalPortfolioSavings = totalAnnualCost * 0.152; // ~15.2% overall portfolio savings
+  const estimatedTotalPortfolioSavings = totalAnnualCost * 0.166; // ~16.6% overall portfolio savings
 
-  // Export Report as PDF using jsPDF with precise text wrapping & dynamic box sizing
+  // Export Report as PDF using jsPDF with auto word wrapping & dynamic box sizing
   const exportReport = () => {
     const doc = new jsPDF('portrait', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
@@ -39,7 +36,6 @@ export default function Group5Optimization() {
     const cyan = [0, 153, 153];
     const darkBg = [11, 15, 23];
     const darkCard = [20, 28, 42];
-    const textGray = [156, 163, 175];
     const textWhite = [255, 255, 255];
     const accentTeal = [0, 229, 255];
 
@@ -54,7 +50,7 @@ export default function Group5Optimization() {
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}  |  Dataset: BDG2 Siemens Portfolio (17,376 Cleaned Rows)`, margin, 21);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}  |  Dataset: BDG2 Siemens Portfolio (1,488 Cleaned Consumers)`, margin, 21);
 
     let y = 32;
 
@@ -74,8 +70,8 @@ export default function Group5Optimization() {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
     doc.setTextColor(...textWhite);
-    doc.text(`• Total Observations: ${metrics.total_observations.toLocaleString()}`, margin + 6, y + 16);
-    doc.text(`• PCA Explained Variance: ${metrics.cumulative_explained_var}% (3 PCs)`, margin + 6, y + 22);
+    doc.text(`• Total Consumers Analyzed: ${metrics.total_consumers.toLocaleString()}`, margin + 6, y + 16);
+    doc.text(`• PCA Explained Variance: ${metrics.cumulative_explained_var}% (4 PCs)`, margin + 6, y + 22);
     doc.text(`• Optimal Clusters (K): ${metrics.optimal_k}`, margin + 6, y + 28);
 
     doc.text(`• Silhouette Score: ${metrics.silhouette_score} (Highest Separation)`, margin + 95, y + 16);
@@ -105,16 +101,15 @@ export default function Group5Optimization() {
 
     doc.text(`• Total Annual Cost: $${totalAnnualCost.toLocaleString(undefined, { maximumFractionDigits: 0 })}`, margin + 95, y + 17);
 
-    // Split long savings text into max 80mm width
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(52, 211, 153);
-    const savingsText = `• Est. Annual Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}/yr (~15.2%)`;
+    const savingsText = `• Est. Annual Savings: $${estimatedTotalPortfolioSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}/yr (~16.6%)`;
     const wrappedSavings = doc.splitTextToSize(savingsText, 82);
     doc.text(wrappedSavings, margin + 95, y + 24);
 
     y += roiBoxHeight + 10;
 
-    // Section 3: 5 Consumer Profiles & Strategies Header
+    // Section 3: 2 Consumer Profiles & Strategies Header
     doc.setTextColor(...darkBg);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
@@ -127,7 +122,6 @@ export default function Group5Optimization() {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
 
-      // Split long text paragraphs to fit inside box
       const profileText = `Profile: ${seg.description}`;
       const profileLines = doc.splitTextToSize(profileText, maxTextWidth);
 
@@ -137,13 +131,12 @@ export default function Group5Optimization() {
       const lineHeight = 3.8;
       const cardHeight = 14 + (profileLines.length * lineHeight) + (strategyLines.length * lineHeight) + 6;
 
-      // Page break check if card exceeds bottom margin (275mm)
       if (y + cardHeight > 275) {
         doc.addPage();
         y = 16;
       }
 
-      // Draw Card Outer Box
+      // Draw Card Box
       doc.setFillColor(245, 247, 250);
       doc.rect(margin, y, contentWidth, cardHeight, 'F');
       doc.setDrawColor(210, 215, 225);
@@ -169,7 +162,6 @@ export default function Group5Optimization() {
       doc.setFontSize(8);
       doc.setTextColor(60, 65, 75);
 
-      // Render wrapped profile lines
       profileLines.forEach(line => {
         doc.text(line, margin + 8, textY);
         textY += lineHeight;
@@ -177,7 +169,6 @@ export default function Group5Optimization() {
 
       textY += 1;
 
-      // Render wrapped strategy lines
       strategyLines.forEach(line => {
         doc.text(line, margin + 8, textY);
         textY += lineHeight;
@@ -185,15 +176,14 @@ export default function Group5Optimization() {
 
       textY += 2;
 
-      // Render Savings Highlight Line
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(0, 140, 140);
       doc.text(`Expected Savings: ${seg.savings_est}`, margin + 8, textY);
 
-      y += cardHeight + 5; // Gap between cards
+      y += cardHeight + 5;
     });
 
-    // Page Numbers & Footer on all pages
+    // Page Numbers & Footer
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
@@ -203,7 +193,6 @@ export default function Group5Optimization() {
       doc.text(`Siemens Energy Consumer Segmentation Analytics Report  |  Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
     }
 
-    // Save PDF
     doc.save('Siemens_Energy_Segmentation_Report.pdf');
   };
 
@@ -224,7 +213,7 @@ export default function Group5Optimization() {
               Consumer Segment Profiles & Targeted Siemens Energy Optimization Hub
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', maxWidth: '850px' }}>
-              Actionable efficiency interventions tailored specifically to the operational characteristics of each of the 5 identified consumer segments.
+              Actionable efficiency interventions tailored specifically to the operational characteristics of each of the identified consumer segments.
             </p>
           </div>
           <button className="btn-primary" onClick={exportReport}>
@@ -352,9 +341,9 @@ export default function Group5Optimization() {
         </div>
       </div>
 
-      {/* 5 Consumer Profile Cards & Targeted Strategies */}
+      {/* Consumer Profile Cards & Targeted Strategies */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>5 Consumer Segments & Siemens Energy Optimization Strategies</h3>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Consumer Segments & Siemens Energy Optimization Strategies</h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {segments.map(seg => (

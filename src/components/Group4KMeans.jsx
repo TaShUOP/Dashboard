@@ -20,12 +20,12 @@ export default function Group4KMeans() {
         type: 'line',
         label: 'Silhouette Score (Higher=Better)',
         data: silScores,
-        borderColor: '#FF80BF',
-        backgroundColor: 'rgba(255, 128, 191, 0.2)',
+        borderColor: '#38BDF8',
+        backgroundColor: 'rgba(56, 189, 248, 0.2)',
         borderWidth: 3,
         pointRadius: 5,
         pointHoverRadius: 7,
-        pointBackgroundColor: '#C2185B',
+        pointBackgroundColor: '#38BDF8',
         tension: 0.3,
         yAxisID: 'y'
       },
@@ -33,8 +33,8 @@ export default function Group4KMeans() {
         type: 'line',
         label: 'WCSS / Inertia (Lower=Better)',
         data: wcssScores,
-        borderColor: '#9C27B0',
-        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+        borderColor: '#00E5FF',
+        backgroundColor: 'rgba(0, 229, 255, 0.1)',
         borderWidth: 2,
         borderDash: [5, 5],
         pointRadius: 4,
@@ -48,26 +48,26 @@ export default function Group4KMeans() {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { color: '#4B5563', font: { family: 'Inter', size: 12 } } },
-      tooltip: { backgroundColor: '#FFFFFF', titleColor: '#1F2937', bodyColor: '#C2185B', borderColor: 'rgba(255, 182, 193, 0.4)', borderWidth: 1 }
+      legend: { labels: { color: '#94A3B8', font: { family: 'Inter', size: 12 } } },
+      tooltip: { backgroundColor: 'rgba(8, 12, 20, 0.95)', titleColor: '#FFF', bodyColor: '#38BDF8', borderColor: 'rgba(56, 189, 248, 0.3)', borderWidth: 1 }
     },
     scales: {
-      x: { grid: { color: 'rgba(255, 182, 193, 0.15)' }, ticks: { color: '#4B5563' } },
+      x: { grid: { color: 'rgba(56, 189, 248, 0.05)' }, ticks: { color: '#94A3B8' } },
       y: {
         type: 'linear',
         display: true,
         position: 'left',
-        title: { display: true, text: 'Silhouette Score', color: '#C2185B' },
-        grid: { color: 'rgba(255, 182, 193, 0.15)' },
-        ticks: { color: '#4B5563' }
+        title: { display: true, text: 'Silhouette Score', color: '#38BDF8' },
+        grid: { color: 'rgba(56, 189, 248, 0.05)' },
+        ticks: { color: '#94A3B8' }
       },
       y1: {
         type: 'linear',
         display: true,
         position: 'right',
-        title: { display: true, text: 'Within-Cluster Sum of Squares (WCSS)', color: '#9C27B0' },
+        title: { display: true, text: 'Within-Cluster Sum of Squares (WCSS)', color: '#00E5FF' },
         grid: { drawOnChartArea: false },
-        ticks: { color: '#4B5563' }
+        ticks: { color: '#94A3B8' }
       }
     }
   };
@@ -77,8 +77,8 @@ export default function Group4KMeans() {
       {/* Header Card */}
       <div className="glass-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-          <PieChart size={24} color="var(--baby-pink-magenta)" />
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1F2937' }}>Group 4 — K-Means Segmentation & Model Evaluation</h2>
+          <PieChart size={24} color="#38BDF8" />
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#FFF' }}>Group 4 — K-Means Segmentation & Model Evaluation</h2>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
           Optimal cluster selection testing K from 2 to 8 across 1,488 building consumers. Selected <strong>Optimal K = 2</strong> clusters achieving maximum Silhouette separation (0.3823) and robust cluster compactness.
@@ -87,37 +87,37 @@ export default function Group4KMeans() {
 
       {/* Model Evaluation Metric Cards */}
       <div className="grid-cols-3">
-        <div className="glass-card" style={{ borderTop: '4px solid #FF80BF' }}>
+        <div className="glass-card" style={{ borderTop: '4px solid #38BDF8' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Silhouette Score</span>
-            <Award size={20} color="#C2185B" />
+            <Award size={20} color="#38BDF8" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1F2937' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFF' }}>
             {metrics.silhouette_score}
           </div>
-          <span className="badge badge-pink" style={{ marginTop: '0.5rem' }}>MAXIMUM SEPARATION AT K=2</span>
+          <span className="badge badge-yellow" style={{ marginTop: '0.5rem' }}>MAXIMUM SEPARATION AT K=2</span>
         </div>
 
-        <div className="glass-card" style={{ borderTop: '4px solid #059669' }}>
+        <div className="glass-card" style={{ borderTop: '4px solid #34D399' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Davies-Bouldin Index</span>
-            <ShieldCheck size={20} color="#059669" />
+            <ShieldCheck size={20} color="#34D399" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1F2937' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFF' }}>
             {metrics.davies_bouldin}
           </div>
           <span className="badge badge-emerald" style={{ marginTop: '0.5rem' }}>COMPACT & SEPARATED</span>
         </div>
 
-        <div className="glass-card" style={{ borderTop: '4px solid #E11D48' }}>
+        <div className="glass-card" style={{ borderTop: '4px solid #00E5FF' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Calinski-Harabasz Index</span>
-            <TrendingUp size={20} color="#E11D48" />
+            <TrendingUp size={20} color="#00E5FF" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1F2937' }}>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFF' }}>
             {metrics.calinski_harabasz.toLocaleString()}
           </div>
-          <span className="badge badge-rose" style={{ marginTop: '0.5rem' }}>HIGH VARIANCE RATIO</span>
+          <span className="badge badge-orange" style={{ marginTop: '0.5rem' }}>HIGH VARIANCE RATIO</span>
         </div>
       </div>
 
@@ -125,12 +125,12 @@ export default function Group4KMeans() {
       <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1F2937' }}>Elbow & Silhouette Curve Analysis (K = 2..8)</h3>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#FFF' }}>Elbow & Silhouette Curve Analysis (K = 2..8)</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               Evaluating optimal cluster count K. Peak Silhouette score of <strong>0.3823</strong> achieved at K=2.
             </p>
           </div>
-          <span className="badge badge-pink">OPTIMAL K = 2 CONFIRMED</span>
+          <span className="badge badge-yellow">OPTIMAL K = 2 CONFIRMED</span>
         </div>
         <div style={{ height: '300px' }}>
           <Chart type="line" data={kChartData} options={kChartOptions} />
@@ -139,7 +139,7 @@ export default function Group4KMeans() {
 
       {/* Cluster Profiles Table */}
       <div className="glass-card">
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: '#FFF' }}>
           Cluster Profiles & Operational Statistics
         </h3>
         <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
@@ -149,7 +149,7 @@ export default function Group4KMeans() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid rgba(255, 182, 193, 0.5)', background: 'var(--baby-pink-light)', color: 'var(--baby-pink-magenta)', textAlign: 'left' }}>
+              <tr style={{ borderBottom: '2px solid rgba(56, 189, 248, 0.3)', background: 'rgba(56, 189, 248, 0.1)', color: '#38BDF8', textAlign: 'left' }}>
                 <th style={{ padding: '0.75rem 1rem' }}>Cluster ID</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Segment Profile</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Mean Consumption</th>
@@ -163,7 +163,7 @@ export default function Group4KMeans() {
               {cluster_profiles.map((cp, idx) => {
                 const seg = segments.find(s => s.id === cp.cluster);
                 return (
-                  <tr key={idx} style={{ borderBottom: '1px solid #FFF0F4' }}>
+                  <tr key={idx} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
                     <td style={{ padding: '0.75rem 1rem' }}>
                       <span style={{
                         display: 'inline-flex',
@@ -172,23 +172,23 @@ export default function Group4KMeans() {
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
-                        background: seg?.color || '#FF80BF',
-                        color: '#FFFFFF',
+                        background: cp.cluster === 0 ? '#38BDF8' : '#60A5FA',
+                        color: '#080C14',
                         fontWeight: 800
                       }}>
                         {cp.cluster}
                       </span>
                     </td>
-                    <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#1F2937' }}>
+                    <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#FFF' }}>
                       {seg?.name || `Segment ${cp.cluster}`}
                     </td>
-                    <td style={{ padding: '0.75rem 1rem', color: 'var(--baby-pink-magenta)', fontWeight: 700 }}>
+                    <td style={{ padding: '0.75rem 1rem', color: '#38BDF8', fontWeight: 700 }}>
                       {cp.mean_consumption} kWh
                     </td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#E11D48' }}>
+                    <td style={{ padding: '0.75rem 1rem', color: '#00E5FF' }}>
                       {cp.max_consumption} kWh
                     </td>
-                    <td style={{ padding: '0.75rem 1rem', color: '#D97706' }}>
+                    <td style={{ padding: '0.75rem 1rem', color: '#60A5FA' }}>
                       {cp.peak_to_average}
                     </td>
                     <td style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)' }}>

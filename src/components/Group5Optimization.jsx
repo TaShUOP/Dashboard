@@ -4,7 +4,7 @@ import { jsPDF } from 'jspdf';
 import dashboardData from '../data/dashboard_data.json';
 
 export default function Group5Optimization() {
-  const { segments, metrics, raw_vs_cleaned, pca_loadings, cluster_profiles, consumer_type_counts } = dashboardData;
+  const { segments, metrics, raw_vs_cleaned, pca_loadings, cluster_profiles } = dashboardData;
 
   // ROI Calculator State
   const [totalAnnualKWh, setTotalAnnualKWh] = useState(50000000); // 50M kWh default
@@ -25,32 +25,29 @@ export default function Group5Optimization() {
   const estimatedSegmentSavings = segCostShare * (savingsPctMap[selectedSegmentId] || 0.15);
   const estimatedTotalPortfolioSavings = totalAnnualCost * 0.166; // ~16.6% overall portfolio savings
 
-  // Export Comprehensive PDF Report incorporating ALL Modules & Elements
+  // Export Comprehensive PDF Report in Baby Pink Theme
   const exportReport = () => {
     const doc = new jsPDF('portrait', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
-    const pageHeight = doc.internal.pageSize.getHeight(); // 297mm
     const margin = 14;
     const contentWidth = pageWidth - margin * 2; // 182mm
 
-    // Color Palette
-    const fuchsiaPink = [255, 0, 127];
-    const fuchsiaDeep = [196, 0, 98];
-    const fuchsiaLight = [255, 230, 242];
-    const darkText = [15, 23, 42];
-    const grayText = [71, 85, 105];
-    const lightBg = [248, 250, 252];
-    const cardBg = [255, 255, 255];
+    // Baby Pink Color Palette
+    const babyPinkHeader = [255, 182, 193];
+    const babyPinkMagenta = [194, 24, 91];
+    const babyPinkLight = [255, 230, 234];
+    const darkText = [31, 41, 55];
+    const grayText = [75, 85, 99];
 
     let y = 0;
 
     const drawHeader = () => {
-      doc.setFillColor(...fuchsiaPink);
+      doc.setFillColor(...babyPinkHeader);
       doc.rect(0, 0, pageWidth, 24, 'F');
-      doc.setTextColor(255, 255, 255);
+      doc.setTextColor(...babyPinkMagenta);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
-      doc.text('SIEMENS ENERGY — CONSUMER SEGMENTATION COMPREHENSIVE REPORT', margin, 12);
+      doc.text('SIEMENS ENERGY — CONSUMER SEGMENTATION REPORT', margin, 12);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.text(`Generated: ${new Date().toLocaleDateString()} | BDG2 Siemens Energy Portfolio (1,488 Cleaned Consumers)`, margin, 19);
@@ -60,13 +57,13 @@ export default function Group5Optimization() {
     drawHeader();
 
     // SECTION 1: EXECUTIVE OVERVIEW & KPIS
-    doc.setFillColor(...fuchsiaLight);
+    doc.setFillColor(...babyPinkLight);
     doc.rect(margin, y, contentWidth, 34, 'F');
-    doc.setDrawColor(...fuchsiaPink);
+    doc.setDrawColor(...babyPinkHeader);
     doc.setLineWidth(0.4);
     doc.rect(margin, y, contentWidth, 34, 'S');
 
-    doc.setTextColor(...fuchsiaDeep);
+    doc.setTextColor(...babyPinkMagenta);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.text('1. EXECUTIVE KPIS & MODEL EVALUATION METRICS', margin + 6, y + 7);
@@ -91,11 +88,11 @@ export default function Group5Optimization() {
     doc.text('2. GROUP 1: DATA CLEANING & DOMAIN AUDIT', margin, y);
     y += 5;
 
-    doc.setFillColor(240, 243, 248);
+    doc.setFillColor(255, 240, 244);
     doc.rect(margin, y, contentWidth, 6, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7.5);
-    doc.setTextColor(...fuchsiaDeep);
+    doc.setTextColor(...babyPinkMagenta);
     doc.text('Domain', margin + 3, y + 4);
     doc.text('Raw Dim', margin + 35, y + 4);
     doc.text('Cleaned Dim', margin + 65, y + 4);
@@ -115,7 +112,7 @@ export default function Group5Optimization() {
       doc.text(r.raw_missing.toLocaleString(), margin + 95, y + 4);
       doc.text(r.cleaned_missing.toLocaleString(), margin + 128, y + 4);
       doc.text(r.outliers.toLocaleString(), margin + 158, y + 4);
-      doc.setDrawColor(230, 235, 242);
+      doc.setDrawColor(255, 230, 234);
       doc.line(margin, y + 6, margin + contentWidth, y + 6);
       y += 7;
     });
@@ -132,9 +129,9 @@ export default function Group5Optimization() {
     const sectorSummary = `Education (573), Office (287), Public Assembly (187), Public Services (158), Lodging (148), Healthcare (25), Parking (22), Storage/Warehouse (13), Industrial (11), Retail (11), Services (9), Food (6), Science (5), Utility (4), Religion (3). Total: 1,488 Facilities.`;
     const sectorWrapped = doc.splitTextToSize(sectorSummary, contentWidth - 8);
     
-    doc.setFillColor(250, 250, 252);
+    doc.setFillColor(255, 250, 252);
     doc.rect(margin, y, contentWidth, 6 + (sectorWrapped.length * 4), 'F');
-    doc.setDrawColor(220, 225, 235);
+    doc.setDrawColor(255, 220, 230);
     doc.rect(margin, y, contentWidth, 6 + (sectorWrapped.length * 4), 'S');
     
     doc.setFont('helvetica', 'normal');
@@ -151,11 +148,11 @@ export default function Group5Optimization() {
     doc.text('4. GROUP 3: PRINCIPAL COMPONENT ANALYSIS (80.40% CUMULATIVE VARIANCE)', margin, y);
     y += 5;
 
-    doc.setFillColor(240, 243, 248);
+    doc.setFillColor(255, 240, 244);
     doc.rect(margin, y, contentWidth, 6, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7.5);
-    doc.setTextColor(...fuchsiaDeep);
+    doc.setTextColor(...babyPinkMagenta);
     doc.text('Feature Variable', margin + 3, y + 4);
     doc.text('PC1 (41.3%)', margin + 60, y + 4);
     doc.text('PC2 (18.6%)', margin + 95, y + 4);
@@ -172,12 +169,11 @@ export default function Group5Optimization() {
       doc.text(row.PC2 > 0 ? `+${row.PC2.toFixed(4)}` : row.PC2.toFixed(4), margin + 95, y + 4);
       doc.text(row.PC3 > 0 ? `+${row.PC3.toFixed(4)}` : row.PC3.toFixed(4), margin + 128, y + 4);
       doc.text(row.PC4 > 0 ? `+${row.PC4.toFixed(4)}` : row.PC4.toFixed(4), margin + 158, y + 4);
-      doc.setDrawColor(230, 235, 242);
+      doc.setDrawColor(255, 230, 234);
       doc.line(margin, y + 6, margin + contentWidth, y + 6);
       y += 6.5;
     });
 
-    // Check page break for Section 5 & 6
     if (y > 220) {
       doc.addPage();
       y = 15;
@@ -192,11 +188,11 @@ export default function Group5Optimization() {
     doc.text('5. GROUP 4: K-MEANS CLUSTER PROFILES (K = 2)', margin, y);
     y += 5;
 
-    doc.setFillColor(240, 243, 248);
+    doc.setFillColor(255, 240, 244);
     doc.rect(margin, y, contentWidth, 6, 'F');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7.5);
-    doc.setTextColor(...fuchsiaDeep);
+    doc.setTextColor(...babyPinkMagenta);
     doc.text('Cluster ID & Profile', margin + 3, y + 4);
     doc.text('Count (%)', margin + 65, y + 4);
     doc.text('Mean (kWh)', margin + 95, y + 4);
@@ -215,7 +211,7 @@ export default function Group5Optimization() {
       doc.text(`${cp.mean_consumption} kWh`, margin + 95, y + 4);
       doc.text(`${cp.max_consumption} kWh`, margin + 125, y + 4);
       doc.text(`${cp.peak_to_average}`, margin + 155, y + 4);
-      doc.setDrawColor(230, 235, 242);
+      doc.setDrawColor(255, 230, 234);
       doc.line(margin, y + 6, margin + contentWidth, y + 6);
       y += 7;
     });
@@ -223,13 +219,13 @@ export default function Group5Optimization() {
     y += 6;
 
     // SECTION 6: GROUP 5 FINANCIAL ROI & TARGETED ACTION PLANS
-    doc.setFillColor(...fuchsiaLight);
+    doc.setFillColor(...babyPinkLight);
     doc.rect(margin, y, contentWidth, 28, 'F');
-    doc.setDrawColor(...fuchsiaPink);
+    doc.setDrawColor(...babyPinkHeader);
     doc.setLineWidth(0.4);
     doc.rect(margin, y, contentWidth, 28, 'S');
 
-    doc.setTextColor(...fuchsiaDeep);
+    doc.setTextColor(...babyPinkMagenta);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
     doc.text('6. GROUP 5: SIMULATED FINANCIAL SAVINGS & ROI ANALYSIS', margin + 6, y + 7);
@@ -271,12 +267,12 @@ export default function Group5Optimization() {
 
       doc.setFillColor(255, 255, 255);
       doc.rect(margin, y, contentWidth, cardHeight, 'F');
-      doc.setDrawColor(220, 225, 235);
+      doc.setDrawColor(255, 200, 215);
       doc.setLineWidth(0.3);
       doc.rect(margin, y, contentWidth, cardHeight, 'S');
 
       // Left Accent Strip
-      doc.setFillColor(...fuchsiaPink);
+      doc.setFillColor(...babyPinkHeader);
       doc.rect(margin, y, 4, cardHeight, 'F');
 
       doc.setTextColor(...darkText);
@@ -304,39 +300,38 @@ export default function Group5Optimization() {
       textY += 2;
 
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(...fuchsiaDeep);
+      doc.setTextColor(...babyPinkMagenta);
       doc.text(`Expected Energy Benefit: ${seg.savings_est}`, margin + 8, textY);
 
       y += cardHeight + 5;
     });
 
-    // Footers across all pages
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(140, 145, 155);
-      doc.text(`Siemens Energy Consumer Analytics Report (Groups 1–5 Complete)  |  Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
+      doc.text(`Siemens Energy Consumer Analytics Report (Baby Pink Theme)  |  Page ${i} of ${pageCount}`, pageWidth / 2, 290, { align: 'center' });
     }
 
-    doc.save('Siemens_Energy_Segmentation_Comprehensive_Report.pdf');
+    doc.save('Siemens_Energy_Segmentation_BabyPink_Report.pdf');
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Header Card */}
       <div className="glass-card" style={{
-        background: 'linear-gradient(135deg, #FFE6F2 0%, #FFF0F6 50%, #FFFFFF 100%)',
-        border: '1px solid rgba(255, 0, 127, 0.3)'
+        background: 'linear-gradient(135deg, #FFE6EA 0%, #FFF0F4 50%, #FFFFFF 100%)',
+        border: '1px solid rgba(255, 182, 193, 0.5)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
-              <span className="badge badge-fuchsia">GROUP 5 DELIVERABLE</span>
+              <span className="badge badge-pink">GROUP 5 DELIVERABLE</span>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Targeted Optimization Matrix</span>
             </div>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0F172A' }}>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#1F2937' }}>
               Consumer Segment Profiles & Targeted Siemens Energy Optimization Hub
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', maxWidth: '850px' }}>
@@ -350,11 +345,11 @@ export default function Group5Optimization() {
       </div>
 
       {/* Interactive ROI & Energy Savings Calculator */}
-      <div className="glass-card" style={{ borderLeft: '4px solid var(--fuchsia-pink)' }}>
+      <div className="glass-card" style={{ borderLeft: '4px solid var(--baby-pink-magenta)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          <Calculator size={24} color="var(--fuchsia-pink)" />
+          <Calculator size={24} color="var(--baby-pink-magenta)" />
           <div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0F172A' }}>Interactive Energy Savings & ROI Calculator</h3>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#1F2937' }}>Interactive Energy Savings & ROI Calculator</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               Simulate annual Siemens Energy facility portfolio electricity consumption to estimate dollar and kWh savings
             </p>
@@ -368,7 +363,7 @@ export default function Group5Optimization() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem', marginBottom: '0.35rem' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Annual Portfolio Electricity Consumption (kWh):</span>
-                <strong style={{ color: 'var(--fuchsia-pink)' }}>{totalAnnualKWh.toLocaleString()} kWh</strong>
+                <strong style={{ color: 'var(--baby-pink-magenta)' }}>{totalAnnualKWh.toLocaleString()} kWh</strong>
               </div>
               <input
                 type="range"
@@ -377,7 +372,7 @@ export default function Group5Optimization() {
                 step="5000000"
                 value={totalAnnualKWh}
                 onChange={e => setTotalAnnualKWh(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--fuchsia-pink)' }}
+                style={{ width: '100%', accentColor: 'var(--baby-pink-magenta)' }}
               />
             </div>
 
@@ -394,7 +389,7 @@ export default function Group5Optimization() {
                 step="0.01"
                 value={ratePerKWh}
                 onChange={e => setRatePerKWh(parseFloat(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--fuchsia-pink)' }}
+                style={{ width: '100%', accentColor: 'var(--baby-pink-magenta)' }}
               />
             </div>
 
@@ -408,11 +403,11 @@ export default function Group5Optimization() {
                 onChange={e => setSelectedSegmentId(parseInt(e.target.value))}
                 style={{
                   width: '100%',
-                  background: '#F8FAFC',
+                  background: '#FFF5F7',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
                   padding: '0.65rem',
-                  color: '#0F172A',
+                  color: '#1F2937',
                   fontSize: '0.9rem',
                   outline: 'none'
                 }}
@@ -428,8 +423,8 @@ export default function Group5Optimization() {
 
           {/* Results Column */}
           <div style={{
-            background: 'var(--fuchsia-light)',
-            border: '1px solid rgba(255, 0, 127, 0.25)',
+            background: 'var(--baby-pink-light)',
+            border: '1px solid rgba(255, 182, 193, 0.5)',
             borderRadius: 'var(--radius-md)',
             padding: '1.25rem',
             display: 'flex',
@@ -437,22 +432,22 @@ export default function Group5Optimization() {
             justifyContent: 'space-between'
           }}>
             <div>
-              <span className="badge badge-fuchsia" style={{ marginBottom: '0.75rem' }}>ESTIMATED ANNUAL IMPACT</span>
+              <span className="badge badge-pink" style={{ marginBottom: '0.75rem' }}>ESTIMATED ANNUAL IMPACT</span>
               <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Portfolio Annual Energy Cost:</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem' }}>
+              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1F2937', marginBottom: '0.75rem' }}>
                 ${totalAnnualCost.toLocaleString(undefined, { maximumFractionDigits: 0 })} / year
               </div>
 
               <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                 Targeted Savings for <strong>Cluster {currentSeg.id} ({currentSeg.name})</strong>:
               </div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--fuchsia-pink)', marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--baby-pink-magenta)', marginBottom: '0.5rem' }}>
                 ${estimatedSegmentSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })} / year
               </div>
             </div>
 
             <div style={{
-              borderTop: '1px dashed rgba(255, 0, 127, 0.3)',
+              borderTop: '1px dashed rgba(255, 182, 193, 0.6)',
               paddingTop: '0.75rem',
               marginTop: '0.75rem',
               display: 'flex',
@@ -470,7 +465,7 @@ export default function Group5Optimization() {
 
       {/* Consumer Profile Cards & Targeted Strategies */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A' }}>Consumer Segments & Siemens Energy Optimization Strategies</h3>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1F2937' }}>Consumer Segments & Siemens Energy Optimization Strategies</h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {segments.map(seg => (
@@ -492,8 +487,8 @@ export default function Group5Optimization() {
                     }}>
                       {seg.id}
                     </span>
-                    <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A' }}>{seg.name}</h4>
-                    <span className="badge badge-fuchsia">
+                    <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1F2937' }}>{seg.name}</h4>
+                    <span className="badge badge-pink">
                       {seg.tag}
                     </span>
                   </div>
@@ -503,10 +498,10 @@ export default function Group5Optimization() {
                 </div>
 
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0F172A' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1F2937' }}>
                     {seg.count.toLocaleString()} Facilities ({seg.pct}%)
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--fuchsia-pink)', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--baby-pink-magenta)', fontWeight: 600 }}>
                     Expected Impact: {seg.savings_est}
                   </div>
                 </div>
@@ -514,7 +509,7 @@ export default function Group5Optimization() {
 
               {/* Characteristics & Targeted Strategy */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '1rem' }}>
-                <div style={{ background: '#F8FAFC', padding: '0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                <div style={{ background: '#FFF5F7', padding: '0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
                   <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
                     Key Operational Indicators
                   </span>
@@ -523,11 +518,11 @@ export default function Group5Optimization() {
                   </ul>
                 </div>
 
-                <div style={{ background: 'var(--fuchsia-light)', padding: '0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 0, 127, 0.2)' }}>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--fuchsia-deep)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <div style={{ background: 'var(--baby-pink-light)', padding: '0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255, 182, 193, 0.5)' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--baby-pink-magenta)', fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <Target size={14} /> Siemens Energy Targeted Action Plan
                   </span>
-                  <p style={{ fontSize: '0.86rem', color: '#0F172A', marginTop: '0.4rem', fontWeight: 500 }}>
+                  <p style={{ fontSize: '0.86rem', color: '#1F2937', marginTop: '0.4rem', fontWeight: 500 }}>
                     {seg.strategy}
                   </p>
                 </div>

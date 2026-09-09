@@ -19,8 +19,8 @@ export default function Group2EDA() {
         label: 'Number of Building Facilities',
         data: typeValues,
         backgroundColor: [
-          '#FF007F', '#FF3399', '#FF66C4', '#C40062', '#E6006F', 
-          '#FF52A1', '#FF7AB8', '#9333EA', '#D97706', '#059669'
+          '#FF99C8', '#FF80BF', '#FFB6C1', '#C2185B', '#E60067', 
+          '#FFC0CB', '#FFD1DC', '#9C27B0', '#D97706', '#059669'
         ],
         borderWidth: 1,
         borderRadius: 4
@@ -35,20 +35,20 @@ export default function Group2EDA() {
       legend: { display: false },
       tooltip: {
         backgroundColor: '#FFFFFF',
-        titleColor: '#0F172A',
-        bodyColor: '#FF007F',
-        borderColor: 'rgba(255, 0, 127, 0.2)',
+        titleColor: '#1F2937',
+        bodyColor: '#C2185B',
+        borderColor: 'rgba(255, 182, 193, 0.4)',
         borderWidth: 1
       }
     },
     scales: {
       x: {
-        grid: { color: 'rgba(255, 0, 127, 0.05)' },
-        ticks: { color: '#475569', font: { family: 'Inter', size: 10 } }
+        grid: { color: 'rgba(255, 182, 193, 0.15)' },
+        ticks: { color: '#4B5563', font: { family: 'Inter', size: 10 } }
       },
       y: {
-        grid: { color: 'rgba(255, 0, 127, 0.05)' },
-        ticks: { color: '#475569' }
+        grid: { color: 'rgba(255, 182, 193, 0.15)' },
+        ticks: { color: '#4B5563' }
       }
     }
   };
@@ -58,8 +58,8 @@ export default function Group2EDA() {
       {/* Header Card */}
       <div className="glass-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-          <Layers size={24} color="var(--fuchsia-pink)" />
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A' }}>Group 2 — EDA, Feature Engineering & Preprocessing</h2>
+          <Layers size={24} color="var(--baby-pink-magenta)" />
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1F2937' }}>Group 2 — EDA, Feature Engineering & Preprocessing</h2>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
           Formulation of 16 statistical & behavioral features across 1,488 building consumers incorporating consumption volume, peak-to-average load ratios, weekday/weekend shifts, day/night ratios, and cyclical peak hour transformations.
@@ -68,7 +68,7 @@ export default function Group2EDA() {
 
       {/* Building Type Breakdown Bar Chart */}
       <div className="glass-card" style={{ display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem', color: '#0F172A' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem', color: '#1F2937' }}>
           Consumer Building Sector Distribution (1,488 Total Facilities)
         </h3>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>

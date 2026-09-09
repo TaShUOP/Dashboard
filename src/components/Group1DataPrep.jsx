@@ -40,8 +40,8 @@ export default function Group1DataPrep() {
       {/* Header Card */}
       <div className="glass-card">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-          <Database size={24} color="var(--fuchsia-pink)" />
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A' }}>Group 1 — Dataset Selection & Data Preparation</h2>
+          <Database size={24} color="var(--baby-pink-magenta)" />
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1F2937' }}>Group 1 — Dataset Selection & Data Preparation</h2>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem' }}>
           Research, ingestion, cleaning, missing-value imputation, duplicate removal, outlier treatment, and schema verification for the Building Data Genome 2 (BDG2) Siemens Energy portfolio dataset.
@@ -50,7 +50,7 @@ export default function Group1DataPrep() {
 
       {/* Raw vs Cleaned Dataset Comparison Audit Table */}
       <div className="glass-card">
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: '#0F172A' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1F2937' }}>
           Raw vs. Cleaned Dataset Audit Comparison
         </h3>
         <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
@@ -60,7 +60,7 @@ export default function Group1DataPrep() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid rgba(255, 0, 127, 0.2)', background: 'var(--fuchsia-light)', color: 'var(--fuchsia-deep)' }}>
+              <tr style={{ borderBottom: '2px solid rgba(255, 182, 193, 0.5)', background: 'var(--baby-pink-light)', color: 'var(--baby-pink-magenta)' }}>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'left' }}>Dataset Domain</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'left' }}>Raw Dimension</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'left' }}>Cleaned Dimension</th>
@@ -72,12 +72,12 @@ export default function Group1DataPrep() {
             </thead>
             <tbody>
               {raw_vs_cleaned.map((row, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                  <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: 'var(--fuchsia-pink)' }}>
+                <tr key={idx} style={{ borderBottom: '1px solid #FFF0F4' }}>
+                  <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: 'var(--baby-pink-magenta)' }}>
                     {row.dataset}
                   </td>
                   <td style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>{row.raw_dim}</td>
-                  <td style={{ padding: '0.75rem 1rem', color: '#0F172A', fontWeight: 600 }}>{row.cleaned_dim}</td>
+                  <td style={{ padding: '0.75rem 1rem', color: '#1F2937', fontWeight: 600 }}>{row.cleaned_dim}</td>
                   <td style={{ padding: '0.75rem 1rem', color: '#059669' }}>{row.duplicates}</td>
                   <td style={{ padding: '0.75rem 1rem', color: '#E11D48' }}>{row.raw_missing.toLocaleString()}</td>
                   <td style={{ padding: '0.75rem 1rem', color: '#059669', fontWeight: 700 }}>{row.cleaned_missing.toLocaleString()}</td>
@@ -93,7 +93,7 @@ export default function Group1DataPrep() {
       <div className="glass-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0F172A' }}>Data Dictionary & Variable Schema</h3>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#1F2937' }}>Data Dictionary & Variable Schema</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               16 aggregated features used for consumer segmentation
             </p>
@@ -108,11 +108,11 @@ export default function Group1DataPrep() {
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 style={{
-                  background: '#F8FAFC',
+                  background: '#FFF5F7',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
                   padding: '0.45rem 0.75rem 0.45rem 2.2rem',
-                  color: '#0F172A',
+                  color: '#1F2937',
                   fontSize: '0.85rem',
                   outline: 'none',
                   width: '200px'
@@ -124,11 +124,11 @@ export default function Group1DataPrep() {
               value={filterType}
               onChange={e => setFilterType(e.target.value)}
               style={{
-                background: '#F8FAFC',
+                background: '#FFF5F7',
                 border: '1px solid var(--border-color)',
                 borderRadius: 'var(--radius-md)',
                 padding: '0.45rem 0.75rem',
-                color: '#0F172A',
+                color: '#1F2937',
                 fontSize: '0.85rem',
                 outline: 'none'
               }}
@@ -143,7 +143,7 @@ export default function Group1DataPrep() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.86rem' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid rgba(255, 0, 127, 0.2)', background: 'var(--fuchsia-light)', color: 'var(--fuchsia-deep)' }}>
+              <tr style={{ borderBottom: '2px solid rgba(255, 182, 193, 0.5)', background: 'var(--baby-pink-light)', color: 'var(--baby-pink-magenta)' }}>
                 <th style={{ padding: '0.75rem 1rem' }}>Feature Variable Name</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Data Type</th>
                 <th style={{ padding: '0.75rem 1rem' }}>Category</th>
@@ -152,15 +152,15 @@ export default function Group1DataPrep() {
             </thead>
             <tbody>
               {filteredDict.map((item, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid #F1F5F9' }} className="glass-card-interactive">
-                  <td style={{ padding: '0.75rem 1rem', fontFamily: 'monospace', fontWeight: 600, color: 'var(--fuchsia-pink)' }}>
+                <tr key={idx} style={{ borderBottom: '1px solid #FFF0F4' }} className="glass-card-interactive">
+                  <td style={{ padding: '0.75rem 1rem', fontFamily: 'monospace', fontWeight: 600, color: 'var(--baby-pink-magenta)' }}>
                     {item.name}
                   </td>
                   <td style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>
                     {item.type}
                   </td>
                   <td style={{ padding: '0.75rem 1rem' }}>
-                    <span className="badge badge-fuchsia">{item.cat}</span>
+                    <span className="badge badge-pink">{item.cat}</span>
                   </td>
                   <td style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)' }}>
                     {item.desc}

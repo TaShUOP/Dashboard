@@ -25,11 +25,11 @@ export default function Navbar({ activeTab, setActiveTab }) {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(255, 255, 255, 0.95)',
+      background: 'rgba(255, 255, 255, 0.96)',
       backdropFilter: 'blur(20px)',
-      borderBottom: '1px solid rgba(255, 0, 127, 0.2)',
+      borderBottom: '1px solid rgba(255, 182, 193, 0.5)',
       padding: '0.85rem 1.75rem',
-      boxShadow: '0 2px 15px rgba(255, 0, 127, 0.08)'
+      boxShadow: '0 2px 15px rgba(255, 182, 193, 0.15)'
     }}>
       <div style={{
         display: 'flex',
@@ -44,20 +44,20 @@ export default function Navbar({ activeTab, setActiveTab }) {
             width: '42px',
             height: '42px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, #FF007F 0%, #FF66C4 100%)',
+            background: 'linear-gradient(135deg, #FFB6C1 0%, #FF80BF 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(255, 0, 127, 0.4)'
+            boxShadow: '0 4px 16px rgba(255, 128, 191, 0.45)'
           }}>
             <Zap size={24} color="#FFFFFF" strokeWidth={2.5} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A' }}>
-                SIEMENS <span style={{ color: 'var(--fuchsia-pink)' }}>ENERGY</span>
+              <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1F2937' }}>
+                SIEMENS <span style={{ color: 'var(--baby-pink-magenta)' }}>ENERGY</span>
               </h1>
-              <span className="badge badge-fuchsia">PCA & K-MEANS AI</span>
+              <span className="badge badge-pink">PCA & K-MEANS AI</span>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
               Consumer Consumption Segmentation & Targeted Optimization Analytics
@@ -70,10 +70,10 @@ export default function Navbar({ activeTab, setActiveTab }) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.35rem',
-          background: '#F8FAFC',
+          background: '#FFF0F4',
           padding: '0.3rem',
           borderRadius: 'var(--radius-lg)',
-          border: '1px solid rgba(255, 0, 127, 0.15)'
+          border: '1px solid rgba(255, 182, 193, 0.4)'
         }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
@@ -88,14 +88,14 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   gap: '0.45rem',
                   padding: '0.5rem 0.9rem',
                   borderRadius: 'var(--radius-md)',
-                  background: isActive ? 'linear-gradient(135deg, #FF007F 0%, #FF52A1 100%)' : 'transparent',
+                  background: isActive ? 'linear-gradient(135deg, #FF99C8 0%, #E60067 100%)' : 'transparent',
                   color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
                   fontWeight: isActive ? 600 : 500,
                   fontSize: '0.84rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   border: 'none',
-                  boxShadow: isActive ? '0 4px 12px rgba(255, 0, 127, 0.3)' : 'none'
+                  boxShadow: isActive ? '0 4px 12px rgba(255, 128, 191, 0.4)' : 'none'
                 }}
               >
                 <Icon size={16} color={isActive ? '#FFFFFF' : 'currentColor'} />

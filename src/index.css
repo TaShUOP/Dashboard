@@ -1,36 +1,36 @@
 :root {
   --bg-dark: #FFFFFF;
-  --bg-page: #F8FAFC;
+  --bg-page: #FFF9FA;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #FFF5F9;
-  --border-color: rgba(255, 0, 127, 0.18);
-  --border-highlight: rgba(255, 0, 127, 0.5);
+  --bg-card-hover: #FFF0F4;
+  --border-color: rgba(255, 182, 193, 0.4);
+  --border-highlight: rgba(255, 128, 191, 0.7);
   
-  /* Fuchsia Pink & Pink Gradient Design Tokens */
-  --fuchsia-pink: #FF007F;
-  --fuchsia-deep: #C40062;
-  --fuchsia-bright: #FF1493;
-  --fuchsia-neon: #E6006F;
-  --fuchsia-soft: #FF66C4;
-  --fuchsia-light: #FFE6F2;
-  --fuchsia-glow: rgba(255, 0, 127, 0.2);
+  /* Baby Pink & Pastel Pink Design Tokens */
+  --baby-pink: #FFB6C1;
+  --baby-pink-soft: #FFC0CB;
+  --baby-pink-deep: #D81B60;
+  --baby-pink-magenta: #C2185B;
+  --baby-pink-neon: #FF80BF;
+  --baby-pink-light: #FFE6EA;
+  --baby-pink-glow: rgba(255, 182, 193, 0.35);
   
-  --pink-gradient-main: linear-gradient(135deg, #FF007F 0%, #FF52A1 50%, #FF7AB8 100%);
-  --pink-gradient-card: linear-gradient(135deg, rgba(255, 0, 127, 0.06) 0%, rgba(255, 102, 196, 0.03) 100%);
-  --pink-gradient-btn: linear-gradient(135deg, #FF007F 0%, #D10068 100%);
-  --pink-gradient-hover: linear-gradient(135deg, #FF3399 0%, #FF007F 100%);
+  --pink-gradient-main: linear-gradient(135deg, #FFB6C1 0%, #FF80BF 50%, #FFC0CB 100%);
+  --pink-gradient-card: linear-gradient(135deg, rgba(255, 182, 193, 0.12) 0%, rgba(255, 192, 203, 0.05) 100%);
+  --pink-gradient-btn: linear-gradient(135deg, #FF99C8 0%, #E60067 100%);
+  --pink-gradient-hover: linear-gradient(135deg, #FF80BF 0%, #FF99C8 100%);
   
-  --siemens-teal: #FF007F;
-  --siemens-bright: #E6006F;
-  --siemens-accent: #FF3399;
-  --accent-purple: #9333EA;
+  --siemens-teal: #C2185B;
+  --siemens-bright: #D81B60;
+  --siemens-accent: #FF80BF;
+  --accent-purple: #9C27B0;
   --accent-amber: #D97706;
   --accent-rose: #E11D48;
   --accent-emerald: #059669;
   
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
   
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -40,8 +40,8 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
   
-  --shadow-card: 0 4px 20px rgba(255, 0, 127, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 8px 30px rgba(255, 0, 127, 0.2);
+  --shadow-card: 0 4px 20px rgba(255, 182, 193, 0.18), 0 1px 3px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 8px 30px rgba(255, 128, 191, 0.3);
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
 }
@@ -59,31 +59,31 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(255, 102, 196, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 10% 10%, rgba(255, 182, 193, 0.25) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(255, 192, 203, 0.20) 0%, transparent 45%);
   min-height: 100vh;
 }
 
-/* Custom Scrollbar with Pink Accent */
+/* Custom Scrollbar with Baby Pink Accent */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #FFF5F7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 127, 0.35);
+  background: rgba(255, 128, 191, 0.45);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--fuchsia-pink);
+  background: var(--baby-pink-neon);
 }
 
-/* White Glassmorphism Card Utility */
+/* Baby Pink Glassmorphism Card Utility */
 .glass-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -94,13 +94,13 @@ body {
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 0, 127, 0.35);
+  border-color: rgba(255, 128, 191, 0.5);
   box-shadow: var(--shadow-hover);
 }
 
 .glass-card-interactive:hover {
   transform: translateY(-2px);
-  border-color: var(--fuchsia-pink);
+  border-color: var(--baby-pink-magenta);
   box-shadow: var(--shadow-hover);
 }
 
@@ -124,10 +124,10 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.05em;
 }
 
-.badge-fuchsia {
-  background: var(--fuchsia-light);
-  color: var(--fuchsia-neon);
-  border: 1px solid rgba(255, 0, 127, 0.35);
+.badge-fuchsia, .badge-pink {
+  background: var(--baby-pink-light);
+  color: var(--baby-pink-magenta);
+  border: 1px solid rgba(255, 128, 191, 0.5);
 }
 
 .badge-teal {
@@ -175,17 +175,17 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 0.5rem;
   transition: all var(--transition-fast);
-  box-shadow: 0 4px 16px rgba(255, 0, 127, 0.35);
+  box-shadow: 0 4px 16px rgba(255, 128, 191, 0.4);
 }
 
 .btn-primary:hover {
   background: var(--pink-gradient-hover);
-  box-shadow: 0 6px 24px rgba(255, 0, 127, 0.5);
+  box-shadow: 0 6px 24px rgba(255, 128, 191, 0.6);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: #F1F5F9;
+  background: #FFF0F4;
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
@@ -200,9 +200,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background: var(--fuchsia-light);
-  border-color: rgba(255, 0, 127, 0.4);
-  color: var(--fuchsia-neon);
+  background: var(--baby-pink-light);
+  border-color: rgba(255, 128, 191, 0.6);
+  color: var(--baby-pink-magenta);
 }
 
 /* Grid Layouts */

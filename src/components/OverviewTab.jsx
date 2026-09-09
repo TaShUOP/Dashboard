@@ -17,10 +17,10 @@ export default function OverviewTab({ setActiveTab }) {
   const { metrics, centroids, segments } = dashboardData;
 
   const kpis = [
-    { title: 'Total Consumers Analyzed', value: metrics.total_consumers.toLocaleString(), label: 'Aggregated facility profiles', icon: Database, color: 'var(--siemens-bright)' },
+    { title: 'Total Consumers Analyzed', value: metrics.total_consumers.toLocaleString(), label: 'Aggregated facility profiles', icon: Database, color: 'var(--fuchsia-pink)' },
     { title: 'Optimal Clusters (K)', value: metrics.optimal_k, label: 'K-Means Silhouette maximum', icon: PieChart, color: '#A78BFA' },
-    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 4 Principal Components', icon: Cpu, color: 'var(--siemens-accent)' },
-    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Peak cluster separation (K=2)', icon: Award, color: '#FBBF24' },
+    { title: 'PCA Explained Variance', value: `${metrics.cumulative_explained_var}%`, label: 'Top 4 Principal Components', icon: Cpu, color: 'var(--siemens-bright)' },
+    { title: 'Silhouette Score', value: metrics.silhouette_score, label: 'Peak cluster separation (K=2)', icon: Award, color: '#FF66C4' },
     { title: 'Davies-Bouldin Index', value: metrics.davies_bouldin, label: 'Cluster compactness (lower=better)', icon: ShieldCheck, color: '#34D399' },
     { title: 'Calinski-Harabasz', value: metrics.calinski_harabasz.toLocaleString(), label: 'Variance ratio criterion', icon: TrendingUp, color: '#F87171' },
   ];
@@ -29,15 +29,15 @@ export default function OverviewTab({ setActiveTab }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       {/* Banner */}
       <div className="glass-card" style={{
-        background: 'linear-gradient(135deg, rgba(0, 153, 153, 0.25) 0%, rgba(11, 15, 23, 0.9) 100%)',
-        border: '1px solid rgba(0, 229, 255, 0.25)',
+        background: 'linear-gradient(135deg, rgba(255, 0, 127, 0.22) 0%, rgba(0, 153, 153, 0.15) 50%, rgba(11, 15, 23, 0.9) 100%)',
+        border: '1px solid rgba(255, 0, 127, 0.3)',
         position: 'relative',
         overflow: 'hidden'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
-              <span className="badge badge-teal">UPDATED DATASET PIPELINE ACTIVE</span>
+              <span className="badge badge-fuchsia">UPDATED DATASET PIPELINE ACTIVE</span>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>BDG2 Siemens Energy Portfolio (1,488 Consumers)</span>
             </div>
             <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem' }}>
@@ -150,8 +150,8 @@ export default function OverviewTab({ setActiveTab }) {
                 <div style={{
                   padding: '0.35rem 0.6rem',
                   borderRadius: '6px',
-                  background: 'rgba(0, 229, 255, 0.12)',
-                  color: 'var(--siemens-bright)',
+                  background: 'rgba(255, 0, 127, 0.15)',
+                  color: 'var(--fuchsia-neon)',
                   fontWeight: 700,
                   fontSize: '0.75rem',
                   whiteSpace: 'nowrap'

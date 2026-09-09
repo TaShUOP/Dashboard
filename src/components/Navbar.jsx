@@ -7,8 +7,7 @@ import {
   Target, 
   Database, 
   Cpu,
-  Activity,
-  SlidersHorizontal
+  Activity
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
@@ -26,9 +25,9 @@ export default function Navbar({ activeTab, setActiveTab }) {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(9, 13, 22, 0.85)',
+      background: 'rgba(9, 13, 22, 0.88)',
       backdropFilter: 'blur(20px)',
-      borderBottom: '1px solid var(--border-color)',
+      borderBottom: '1px solid rgba(255, 0, 127, 0.2)',
       padding: '0.85rem 1.75rem'
     }}>
       <div style={{
@@ -44,20 +43,20 @@ export default function Navbar({ activeTab, setActiveTab }) {
             width: '42px',
             height: '42px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, #009999 0%, #00E5FF 100%)',
+            background: 'linear-gradient(135deg, #FF007F 0%, #00E5FF 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 16px rgba(0, 229, 255, 0.4)'
+            boxShadow: '0 0 20px rgba(255, 0, 127, 0.5)'
           }}>
             <Zap size={24} color="#0B0F17" strokeWidth={2.5} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF' }}>
-                SIEMENS <span style={{ color: 'var(--siemens-bright)' }}>ENERGY</span>
+                SIEMENS <span style={{ color: 'var(--fuchsia-pink)' }}>ENERGY</span>
               </h1>
-              <span className="badge badge-teal">PCA & K-MEANS AI</span>
+              <span className="badge badge-fuchsia">PCA & K-MEANS AI</span>
             </div>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
               Consumer Consumption Segmentation & Targeted Optimization Analytics
@@ -88,16 +87,16 @@ export default function Navbar({ activeTab, setActiveTab }) {
                   gap: '0.45rem',
                   padding: '0.5rem 0.9rem',
                   borderRadius: 'var(--radius-md)',
-                  background: isActive ? 'linear-gradient(135deg, rgba(0, 153, 153, 0.3) 0%, rgba(0, 229, 255, 0.2) 100%)' : 'transparent',
-                  color: isActive ? 'var(--siemens-bright)' : 'var(--text-secondary)',
+                  background: isActive ? 'linear-gradient(135deg, rgba(255, 0, 127, 0.3) 0%, rgba(0, 229, 255, 0.2) 100%)' : 'transparent',
+                  color: isActive ? '#FF66C4' : 'var(--text-secondary)',
                   fontWeight: isActive ? 600 : 500,
                   fontSize: '0.84rem',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  border: isActive ? '1px solid rgba(0, 229, 255, 0.3)' : '1px solid transparent'
+                  border: isActive ? '1px solid rgba(255, 0, 127, 0.4)' : '1px solid transparent'
                 }}
               >
-                <Icon size={16} />
+                <Icon size={16} color={isActive ? '#FF66C4' : 'currentColor'} />
                 <span>{tab.label}</span>
               </button>
             );
